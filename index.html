@@ -2406,7 +2406,7 @@ const SFX = {
 // Music: one looping track per place. Tracks crossfade over 1.5 s, including at the loop point.
 // Files load only when needed. On iPhone and iPad (where audio volume can't be set) the fade runs through Web Audio.
 // =====================================================================================================
-const TRACKS = { menu: 'rooftops-lose-their-blue', l1: '8-bit-city-pop', l2: 'mask-rush', l3: 'square-wave-arpeggios', l4: 'pixelated-minor-key', l5: 'dryspell', l6: 'pixel-lament' };
+const TRACKS = { menu: 'pixel-coin-run', news: 'pixel-party', l1: '8-bit-city-pop', l2: 'mask-rush', l3: 'square-wave-arpeggios', l4: 'pixelated-minor-key', l5: 'dryspell', l6: 'pixel-lament' };
 const MUSIC_FADE = 1.5;
 const MUS = { on: store.get('music', true), vol: 0.5, want: null, cur: null, decks: [], unlocked: false, duck: 1, duckTo: 1, ios: /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) };
 const musicURL = (key) => `music/${TRACKS[key]}.mp3`;
@@ -2466,8 +2466,10 @@ function musicToggle(on) {
 }
 // which track goes with which screen
 function musicForScreen(id) {
-  if (id === 'game') return !run ? 'menu' : run.li >= LEVELS.length ? 'l1' : 'l' + (run.li + 1);   // after the last level: the celebration track
-  if (id === 'comic') return comicSeq === 'opening' ? 'menu' : 'l1';
+  // the menu track also plays for the finale: the last win, the ending and the easter egg
+  if (id === 'game') return !run || run.li >= LEVELS.length ? 'menu' : 'l' + (run.li + 1);
+  if (id === 'comic') return 'menu';
+  if (id === 'news') return 'news';   // the mission briefing between levels
   if ((id === 'info' || id === 'board') && MUS.want && MUS.want !== 'menu' && (infoBack === 'game' || boardBack === 'game')) return MUS.want;
   return 'menu';
 }
