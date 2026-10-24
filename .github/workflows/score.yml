@@ -49,6 +49,15 @@ jobs:
           done
           cat "$RUNNER_TEMP/out" >> "$GITHUB_OUTPUT"
 
+      - name: Hide a name that breaks the rules
+        if: steps.rec.outputs.hide == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh issue edit "$NUMBER" --repo "$REPO" --title "Score: (name removed)" --body "The name in this score broke Haze Squad's name rules, so it was removed."
+
       - name: Reply and close the issue
         env:
           GH_TOKEN: ${{ github.token }}

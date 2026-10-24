@@ -12,6 +12,7 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
 | `leaderboard.json` | The world leaderboard. The game reads it; only the robot below writes it. |
 | `.github/workflows/score.yml` | The scoreboard robot (a GitHub Action). |
 | `scripts/record-score.js` | Checks a posted score, recomputes it and merges it into `leaderboard.json`. |
+| `scripts/name-filter.js` | The name filter, shared with the game. |
 
 ## Switch it on (one time)
 
@@ -31,6 +32,8 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
   - keeps each GitHub account's best entry on each board, top 50;
   - commits `leaderboard.json`, replies with the player's ranks and closes the issue.
 - GitHub Pages republishes within a minute or two, and the game shows the new board.
+
+**Names.** The game refuses names with sexual, vulgar, racist, abusive or violent words, in English, Malay, Singlish, Mandarin and Tamil. That includes spaced-out letters, leetspeak and lookalike letters. The robot runs the same check (`scripts/name-filter.js`): a bad name goes on the board as **Hero**, and the issue's title and text are wiped.
 
 If you change the par times in the game (`PAR` in the game code), change `PAR` in `scripts/record-score.js` to match.
 

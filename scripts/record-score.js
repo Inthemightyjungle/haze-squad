@@ -4,6 +4,7 @@
 // Writes a short reply for the issue to $GITHUB_OUTPUT (key: message).
 const fs = require('fs');
 const path = require('path');
+const { nameProblem } = require('./name-filter.js');
 
 const FILE = path.join(__dirname, '..', 'leaderboard.json');
 const LEVELS = ['North', 'East', 'Central', 'South', 'West', 'Sumatra'];
@@ -15,9 +16,10 @@ const levelScore = (li, t, hp) => Math.round(1000 * PAR[li] / Math.max(t, 20)) +
 const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
+let hideName = false;
 function reply(msg) {
   console.log(msg);
-  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `message<<EOF_MESSAGE\n${msg}\nEOF_MESSAGE\n`);
+  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `message<<EOF_MESSAGE\n${msg}\nEOF_MESSAGE\nhide=${hideName}\n`);
 }
 function load() {
   try {
@@ -53,7 +55,10 @@ function main() {
     reply(`Hi @${user}! I couldn't find any scores in this issue. Open the game, go to **Leaderboard** and press **Post my best scores**, then submit the issue without changing the block at the bottom.`);
     return;
   }
-  const name = String(p.name || user).replace(/[^\p{L}\p{N} ._'-]/gu, '').trim().slice(0, 16) || user;
+  // names with rude, hurtful or violent words are replaced, and the issue is cleaned up by the workflow
+  const rawName = String(p.name || ''), cleaned = rawName.replace(/[^\p{L}\p{N} ._'-]/gu, '').trim().slice(0, 16);
+  hideName = !!(nameProblem(rawName) || nameProblem(cleaned) || nameProblem(user));
+  const name = hideName || !cleaned ? 'Hero' : cleaned;
   const date = new Date().toISOString().slice(0, 10);
   const board = load(), lines = [], skipped = [];
 
@@ -81,6 +86,7 @@ function main() {
   }
   board.updated = new Date().toISOString();
   fs.writeFileSync(FILE, JSON.stringify(board, null, 1) + '\n');
-  reply(`Thanks for cleaning the air, **${name}**! Here's what I recorded:\n\n${lines.join('\n')}${skipped.length ? `\n\nI skipped ${skipped.join(', ')} because the numbers didn't look right.` : ''}\n\nThe leaderboard updates on the game page in a minute or two.`);
+  const note = hideName ? `That name isn't allowed in Haze Squad (no rude, hurtful or violent words), so you're on the board as **Hero**. Pick a kind name in the game and post again to change it.\n\n` : '';
+  reply(`${note}Thanks for cleaning the air, **${name}**! Here's what I recorded:\n\n${lines.join('\n')}${skipped.length ? `\n\nI skipped ${skipped.join(', ')} because the numbers didn't look right.` : ''}\n\nThe leaderboard updates on the game page in a minute or two.`);
 }
 main();
