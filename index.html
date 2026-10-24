@@ -240,23 +240,27 @@ h1 { color: var(--text); text-shadow: 3px 3px 0 var(--ink); }
   padding: max(10px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px));
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start;
 }
-.panel { pointer-events: none; display: grid; gap: 5px; width: min(256px, 58vw); box-sizing: border-box; padding: 7px 9px 8px; background: var(--hud); border: 3px solid var(--ink); box-shadow: inset 0 0 0 2px var(--grape); border-radius: 10px; }
-.meter { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto; align-items: center; gap: 6px; font-family: var(--f-pixel); font-weight: 700; font-size: 14px; }
-.meter .lbl { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.panel { pointer-events: none; display: grid; gap: 6px; width: min(300px, 64vw); box-sizing: border-box; padding: 7px 9px 8px; background: var(--hud); border: 3px solid var(--ink); box-shadow: inset 0 0 0 2px var(--grape); border-radius: 10px; }
+.meter { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: center; gap: 7px; font-family: var(--f-pixel); font-weight: 700; font-size: 18px; }
+.meter .lbl { color: var(--muted); font-size: 14px; white-space: nowrap; }
 .meter .val { font-variant-numeric: tabular-nums; min-width: 2.6em; text-align: right; }
-.track { position: relative; height: 10px; background: #0d0a1c; border-radius: 3px; box-shadow: 0 0 0 2px var(--ink); }
+.track { position: relative; height: 14px; background: #0d0a1c; border-radius: 3px; box-shadow: 0 0 0 2px var(--ink); }
 .track.clean i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 3px; background: repeating-linear-gradient(90deg, #3ee6a8 0 6px, #2fcf93 6px 8px); transition: width .25s; }
-.track.clean b { position: absolute; top: -4px; bottom: -4px; width: 3px; background: var(--sun); box-shadow: 0 0 0 1px var(--ink); }
+.track.clean b { position: absolute; top: -5px; bottom: -5px; width: 4px; background: var(--sun); box-shadow: 0 0 0 1px var(--ink); }
 .track.clean.done i { background: #a6ffd9; }
 .track.psi { display: flex; overflow: visible; }
 .track.psi s { flex: 1; text-decoration: none; }
 .track.psi s:nth-child(1) { background: #6cc76a; border-radius: 3px 0 0 3px; } .track.psi s:nth-child(2) { background: #e9cf5c; } .track.psi s:nth-child(3) { background: #ef9a45; }
 .track.psi s:nth-child(4) { background: #e2603f; } .track.psi s:nth-child(5) { background: #c25a8a; } .track.psi s:nth-child(6) { background: #b993ff; border-radius: 0 3px 3px 0; }
-.track.psi b { position: absolute; top: -5px; width: 4px; height: 20px; margin-left: -2px; background: #fff; box-shadow: 0 0 0 2px var(--ink); transition: left .3s; }
+.track.psi b { position: absolute; top: -6px; width: 5px; height: 26px; margin-left: -2.5px; background: #fff; box-shadow: 0 0 0 2px var(--ink); transition: left .3s; }
 .panel .chips { display: flex; gap: 6px; flex-wrap: wrap; font-family: var(--f-pixel); font-weight: 700; font-size: 14px; }
 .panel .chip { display: inline-flex; align-items: center; gap: 3px; background: var(--hud-2); color: var(--text); padding: 1px 6px 1px 4px; border: 0; border-radius: 6px; box-shadow: none; font-size: 14px; }
 .panel .chip canvas { width: 20px; height: 20px; }
 .panel .chip .cl { color: var(--muted); font-size: 12px; margin-right: 2px; }
+/* HUD boxes fade to 10% while the hero is underneath */
+#hudPanel, #hudRight, #squadbar, #powerBtn, #toast, #coach { transition: opacity .18s ease-out; }
+.peek { opacity: .1 !important; }
+.hstat .p.res { font-family: var(--f-pixel); font-size: 11px; font-weight: 700; color: var(--mint); letter-spacing: 0; }
 .panel .chip i { width: 10px; height: 10px; display: inline-block; background: #ff5a3a; box-shadow: 0 0 0 2px var(--ink); margin: 0 2px; border-radius: 2px; animation: corepulse 1s steps(2) infinite; }
 .panel .chip i.tamed { background: var(--sun); animation: none; } .panel .chip i.ice { background: #aee1ff; animation: none; } .panel .chip i.ok { background: var(--mint); animation: none; }
 .panel .chip.fire i { background: var(--orange); }
@@ -270,7 +274,7 @@ h1 { color: var(--text); text-shadow: 3px 3px 0 var(--ink); }
 a.btn { text-decoration: none; display: inline-block; }
 @keyframes corepulse { 50% { background: #8f2a1c; } }
 .panel .chip em { font-style: normal; color: var(--sun); font-size: 12px; }
-.meter .val small { font-size: 11px; color: var(--muted); }
+.meter .val small { font-size: 13px; color: var(--muted); }
 .squadbar { position: absolute; left: max(12px, env(safe-area-inset-left, 0px)); bottom: max(14px, env(safe-area-inset-bottom, 0px)); display: grid; gap: 3px; pointer-events: none; max-width: calc(100vw - 130px); }
 .squadbar .heads { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; background: var(--hud); padding: 3px 5px; border-radius: 8px; border: 2px solid var(--ink); justify-self: start; }
 .squadbar .heads:empty { display: none; }
@@ -301,7 +305,7 @@ a.btn { text-decoration: none; display: inline-block; }
 .pause canvas { width: 36px; height: 36px; display: block; }
 #minimap { width: 104px; height: 76px; border: 3px solid var(--ink); border-radius: 8px; background: rgba(27,21,51,.88); }
 /* goal check boxes: Goal 1 is clean air, Goal 2 the zone's task; both are needed */
-.ck { display: inline-grid; place-items: center; width: 11px; height: 11px; margin-right: 4px; border: 2px solid var(--muted); border-radius: 3px; font-style: normal; font-size: 10px; line-height: 1; vertical-align: -1px; color: var(--ink); }
+.ck { display: inline-grid; place-items: center; width: 13px; height: 13px; margin-right: 4px; border: 2px solid var(--muted); border-radius: 3px; font-style: normal; font-size: 10px; line-height: 1; vertical-align: -1px; color: var(--ink); }
 .ck.done { background: var(--mint); border-color: var(--mint); }
 .ck.done::after { content: "✓"; font-weight: 700; }
 .panel .chip.side.done { background: #1d5a45; }
@@ -325,7 +329,7 @@ a.btn { text-decoration: none; display: inline-block; }
 .coach.done { border-color: #12855c; }
 .hint { position: absolute; left: 50%; top: 50%; transform: translate(-50%, 74px); pointer-events: none; font-family: var(--f-pixel); font-weight: 700; font-size: 18px; color: #fff; text-shadow: 0 2px 0 #000, 0 0 6px #000; text-align: center; opacity: .95; }
 .loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); font-family: var(--f-pixel); font-size: 20px; z-index: 50; }
-@media (max-width: 420px) { #minimap { width: 84px !important; height: 62px !important; } .meter { grid-template-columns: 68px minmax(0, 1fr) auto; font-size: 13px; gap: 5px; } .meter .lbl { font-size: 11px; } .ticker > div { font-size: 13px; } .coach { bottom: calc(max(14px, env(safe-area-inset-bottom, 0px)) + 104px); } .coach p { font-size: 14.5px; } }
+@media (max-width: 420px) { #minimap { width: 84px !important; height: 62px !important; } .meter { grid-template-columns: 78px minmax(0, 1fr) auto; font-size: 16px; gap: 6px; } .meter .lbl { font-size: 12.5px; } .track { height: 12px; } .ticker > div { font-size: 13px; } .coach { bottom: calc(max(14px, env(safe-area-inset-bottom, 0px)) + 104px); } .coach p { font-size: 14.5px; } }
 
 /* Sheets over the game */
 .sheet-wrap { position: fixed; inset: 0; z-index: 30; background: rgba(27,21,51,.82); overflow-y: auto; display: grid; place-items: center;
@@ -496,12 +500,12 @@ a.btn { text-decoration: none; display: inline-block; }
         <span class="chip side" id="helpChip" title="Goal 2"><em class="ck" id="g2ck"></em><canvas id="goalIcon" class="px" width="16" height="16" aria-hidden="true"></canvas><span id="helpText">0/5</span></span>
       </div>
     </div>
-    <div class="right">
+    <div class="right" id="hudRight">
       <button class="pause" id="pauseBtn" aria-label="Pause"><canvas id="pauseIcon" class="px" width="24" height="24"></canvas></button>
       <canvas id="minimap" width="240" height="176" aria-label="Mini map"></canvas>
     </div>
   </div>
-  <div class="squadbar"><div class="heads" id="squad" aria-label="Your squad"></div><div class="hstats" id="hstats" aria-label="Your upgrades"></div></div>
+  <div class="squadbar" id="squadbar"><div class="heads" id="squad" aria-label="Your squad"></div><div class="hstats" id="hstats" aria-label="Your upgrades"></div></div>
   <div class="coach" id="coach" hidden><div class="ctop"><span class="cstep" id="coachStep">1/6</span><button class="cskip" id="coachSkip">Skip tutorial</button></div><p id="coachText"></p></div>
   <button class="powerbtn" id="powerBtn" hidden aria-label="Use power"><canvas id="powerIcon" class="px" width="16" height="16" aria-hidden="true"></canvas><span id="powerName">Rain</span><b id="powerCount">1</b></button>
   <div class="banner" id="banner" aria-live="polite"></div>
@@ -1225,6 +1229,15 @@ const ASSET_META = {"bld_shelter":{"image":"bld_shelter.png","frames":{"shelter_
 // ---------------------------------------------------------------------------------------------------
 const CELL = 24, SPACING = 22, WW = 1800, WH = 1320;
 const CLEAN = 10, DIRTY = 30, MAX_POWERS = 3, NURSE_HEAL = 1.1, STAT_MAX = 4;
+// health loss per second by the PSI you breathe: nothing in good air, a trickle at 100, fast at 300,
+// and at 400 an unprotected 100-health hero lasts 20 seconds. Each N95 level (one per nurse) blocks 100 PSI of it.
+const MASK_MAX = 3, MASK_RESIST = 100;
+const HAZE_DMG = [[50, 0], [100, 0.25], [200, 1], [300, 2.5], [400, 5], [600, 8], [900, 10]];
+function hazeDamage(psi) {
+  if (psi <= HAZE_DMG[0][0]) return 0;
+  for (let i = 1; i < HAZE_DMG.length; i++) { const [x0, y0] = HAZE_DMG[i - 1], [x1, y1] = HAZE_DMG[i]; if (psi <= x1) return y0 + (y1 - y0) * (psi - x0) / (x1 - x0); }
+  return HAZE_DMG[HAZE_DMG.length - 1][1];
+}
 const HAZE = { diffuse: 0.08, inflow: 0.12, coreRate: 0.45, tameRate: 0.03, coreGrow: 2.2, frontAdd: 12, dropEvery: 45, rainDecay: 0.08, vac: 230 };
 const FRONT_EVERY = [55, 50, 46, 44, 40, 38];
 function mulberry32(a) { return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -1233,7 +1246,7 @@ function mulberry32(a) { return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; 
 const FRIENDS = {
   scdf: { name: 'SCDF Firefighter', color: '#d9412f', trim: '#f7c548', up: 'cone', upText: 'Wider nozzle', help: 'Sprays water: puts out fires and blasts a line of haze', line: 'Water jet ready!' },
   nea: { name: 'NEA Officer', color: '#2f9e6a', trim: '#d8f3e6', up: 'reach', upText: 'Longer reach', help: 'Scans the air: a pulse that clears a ring of haze, and you see further', line: 'I’ll read the air for you.' },
-  nurse: { name: 'Polyclinic Nurse', color: '#eef3f6', trim: '#3c8de0', up: 'mask', upText: 'N95 mask', help: 'Fits you with an N95 mask (half the haze damage) and heals you', line: 'Mask on. I’ll keep you healthy.' },
+  nurse: { name: 'Polyclinic Nurse', color: '#eef3f6', trim: '#3c8de0', up: 'mask', upText: 'N95 mask', help: 'Fits you with an N95 mask that blocks 100 PSI of haze damage (each nurse adds 100 more, up to 300), and heals you', line: 'Mask on. I’ll keep you healthy.' },
   rc: { name: 'RC Volunteer', color: '#f08a24', trim: '#fff1d6', up: 'speed', upText: 'Bicycle', help: 'Lends you a bicycle and calls out neighbours who need help', line: 'I know everyone here!' },
   tech: { name: 'Purifier Technician', color: '#3f74d8', trim: '#cfe0ff', up: 'suction', upText: 'Turbo suction', help: 'Tunes your vacuum and drops air purifier pods', line: 'Let me tune that motor.' },
 };
@@ -1295,9 +1308,9 @@ function heroStats(run, chain = []) {
     reach: Math.min(STAT_MAX, perkN(run, 'wand') + friendLv(chain, 'nea')),
     suction: Math.min(STAT_MAX, perkN(run, 'motor') + friendLv(chain, 'tech')),
     speed: Math.min(STAT_MAX, perkN(run, 'shoes') + friendLv(chain, 'rc')),
-    mask: friendLv(chain, 'nurse') > 0 ? 1 : 0,
+    mask: Math.min(MASK_MAX, chain.filter((f) => f.type === 'nurse').length),
   };
-  return { lv, half: coneHalf(lv.cone), range: coneRange(lv.reach), power: HAZE.vac * suction(lv.suction), speed: 128 * speedK(lv.speed), mask: lv.mask };
+  return { lv, half: coneHalf(lv.cone), range: coneRange(lv.reach), power: HAZE.vac * suction(lv.suction), speed: 128 * speedK(lv.speed), mask: lv.mask, resist: lv.mask * MASK_RESIST };
 }
 // the vacuum from gear alone (what you start each zone with)
 function vacStats(run) { return heroStats(run, []); }
@@ -1423,6 +1436,7 @@ function randomSpot(S, R, opts = {}) {
     if (blocked(S, x, y, 22)) continue;
     if (S.reach && !S.reach[cellOf(S, x, y)]) continue;
     if (opts.from && dist(x, y, opts.from.x, opts.from.y) < (opts.min || 0)) continue;
+    if (opts.from && opts.max && dist(x, y, opts.from.x, opts.from.y) > opts.max) continue;
     if (opts.avoid && opts.avoid.some((p) => dist(x, y, p.x, p.y) < (opts.gap || 120))) continue;
     if (opts.noDanger && S.dangers.some((d) => dist(x, y, d.x, d.y) < d.r + 30)) continue;
     if (opts.inRects && !opts.inRects.some((r) => rectHit(r, x, y, -12))) continue;
@@ -1531,8 +1545,11 @@ function genLevel(run, li, seed) {
   // friends waiting around the map
   const fl = [];
   for (const [type, n] of Object.entries(L.friends)) for (let k = 0; k < n; k++) fl.push(type);
+  let nurseNear = false;
   for (const type of fl) {
-    const p = randomSpot(S, R, { from: S.shelter, min: 170, avoid: placed.concat(S.friends), gap: 140, noDanger: true });
+    // the first nurse waits close to the community club: in thick haze you need her mask fast
+    const near = type === 'nurse' && !nurseNear; if (near) nurseNear = true;
+    const p = randomSpot(S, R, { from: S.shelter, min: 170, max: near ? 340 : 0, avoid: placed.concat(S.friends), gap: 140, noDanger: true });
     S.friends.push({ type, x: p.x, y: p.y, hx: p.x, hy: p.y, joined: false, skin: (R() * 6) | 0, wob: R() * 6 });
   }
   for (let k = 0; k < perkN(run, 'kampung'); k++) {
@@ -1884,7 +1901,7 @@ function update(S, inp, dt) {
   }
   S.crates = S.crates.filter((c) => !c.taken);
 
-  // breathing: damage grows faster than the PSI; only a nurse's N95 mask halves it
+  // breathing: health drains faster the higher the PSI (hazeDamage); N95 levels from nurses block 100 PSI each
   let sum = 0, cnt = 0;
   cellsIn(S, P.x, P.y, 40, (c) => { sum += d[c]; cnt++; });
   const localPsi = cnt ? sum / cnt : 0;
@@ -1892,14 +1909,19 @@ function update(S, inp, dt) {
   const dz = S.dangers.find((z) => z.active && dist(P.x, P.y, z.x, z.y) < z.r);
   S.inDanger = !!dz;
   const tamed = dz && (dz.tame >= 1 || dz.ice > 0);
-  const mult = dz && !tamed ? 1.6 + 2 * (dz.r / dz.r0 - 1) : 1;
-  // the air you breathe: the haze right around you, plus the zone's haze blowing about (it falls as you clean the zone)
-  let dmg = ((localPsi > 30 ? 0.38 * localPsi / 100 * mult : 0) + 0.12 * (S.pm || 0) / 100) * (Hs.mask ? 0.5 : 1);
+  const mult = dz && !tamed ? 1.25 + (dz.r / dz.r0 - 1) : 1;
+  // the air you breathe: mostly the haze right around you, plus the zone's haze blowing about (it falls as you clean the zone)
+  S.breathe = 0.75 * (S.pm || 0) + 0.25 * localPsi * mult;
+  S.resist = Hs.resist || 0;
+  let dmg = hazeDamage(Math.max(0, S.breathe - S.resist));
   for (const f of S.fires) if (f.state === 'burning' && dist(f.x, f.y, P.x, P.y) < 16 + 7 * f.size) dmg += 10 + 5 * f.size;
   const inShelter = dist(P.x, P.y, S.shelter.x, S.shelter.y) < S.shelter.r;
-  const heal = NURSE_HEAL * Math.min(2, nurse) + (inShelter ? 12 : 0);
+  const heal = NURSE_HEAL * Math.min(MASK_MAX, nurse) + (inShelter ? 12 : 0);
   P.hp = Math.max(0, Math.min(P.maxHp, P.hp + (heal - dmg) * dt));
   S.dmgRate = dmg; S.healRate = heal;
+  // warn when the air will finish you off soon
+  S.airWarnT = (S.airWarnT || 0) - dt;
+  if (dmg - heal > 2 && S.airWarnT <= 0 && P.hp > 0) { S.airWarnT = 14; ev.push({ type: 'airWarn', secs: Math.max(1, Math.round(P.hp / (dmg - heal))), mask: Hs.mask, psi: Math.round(S.breathe) }); }
   S.warnT -= dt;
   if (dz && !tamed && S.warnT <= 0) { S.warnT = 6; ev.push({ type: 'danger', need: dz.need, have: S.chain.length, x: dz.x, y: dz.y }); }
 
@@ -3424,8 +3446,25 @@ function statIcon(cv, st) {
   if (st === 'reach') { const g = cv.getContext('2d'); g.clearRect(0, 0, 16, 16); g.fillStyle = '#c9d6db'; g.fillRect(1, 7, 9, 2); drawCone(g, 9, 8, 0.6, 6, 1, 'rgba(62,230,168,0.6)', '#3ee6a8', false); return; }
   if (!iconTo(cv, 'ui_icons', STAT_ICON[st])) { const g = cv.getContext('2d'); g.fillStyle = '#ffd23f'; g.fillRect(3, 3, 10, 10); }
 }
+// any HUD box the hero walks under fades to 10% so it never hides them
+const PEEK_IDS = ['hudPanel', 'hudRight', 'squadbar', 'powerBtn', 'toast', 'coach'];
+function peekHud() {
+  const P = S.player, k = PS / DPR, r0 = gc.getBoundingClientRect();
+  const sx = r0.left + (P.x * K - camL) * k, sy = r0.top + (P.y * K - camT) * k;
+  const hero = { l: sx - 16 * k, r: sx + 16 * k, t: sy - 34 * k, b: sy + 10 * k };
+  for (const id of PEEK_IDS) {
+    const el = $(id); if (!el || el.hidden) continue;
+    let hit = false;
+    for (const box of (id === 'squadbar' ? el.children : [el])) {
+      const r = box.getBoundingClientRect(); if (!r.width || !r.height) continue;
+      if (r.left < hero.r && r.right > hero.l && r.top < hero.b && r.bottom > hero.t) { hit = true; break; }
+    }
+    el.classList.toggle('peek', hit);
+  }
+}
 function updateHud() {
   const P = S.player;
+  peekHud();
   // clean air: the level's goal. The bar fills as the zone's ground is cleared (below 10 PSI); the yellow tick is the target
   const cl = clamp(S.clean, 0, 1), tg = S.target;
   $('cleanFill').style.width = (cl * 100).toFixed(1) + '%';
@@ -3482,13 +3521,14 @@ function updateHud() {
     hudCache.stats = key; hudCache.statLv = { ...H.lv };
     const box = $('hstats'); box.innerHTML = '';
     for (const [k] of STATS) {
-      const n = H.lv[k], max = k === 'mask' ? 1 : STAT_MAX;
+      const n = H.lv[k], max = k === 'mask' ? MASK_MAX : STAT_MAX;
       const el = document.createElement('span'); el.className = 'hstat' + (k === 'mask' ? ' mask' : '') + (old[k] != null && n > old[k] ? ' pop' : '');
-      el.title = `${STAT_NAME[k]}: level ${n} of ${max}`;
+      el.title = k === 'mask' ? `N95 mask: blocks ${n * MASK_RESIST} PSI of haze (each nurse adds ${MASK_RESIST}, up to ${MASK_MAX * MASK_RESIST})` : `${STAT_NAME[k]}: level ${n} of ${max}`;
       const cv = mk(16, 16); cv.className = 'px'; statIcon(cv, k); el.appendChild(cv);
       const pp = document.createElement('span'); pp.className = 'p'; pp.innerHTML = Array.from({ length: max }, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('');
+      if (k === 'mask') { pp.className = 'p res'; pp.textContent = n ? `−${n * MASK_RESIST}` : 'none'; }
       el.appendChild(pp);
-      if (k === 'mask' && !n) el.style.opacity = 0.45;
+      if (k === 'mask' && !n) el.style.opacity = 0.55;
       box.appendChild(el);
     }
   }
@@ -3554,7 +3594,7 @@ function banner(text, sub = '', kind = '') {
 }
 function powerIcon(ty) { const cv = mk(16, 16); cv.className = 'icon'; if (!iconTo(cv, 'fx_airdrop', `icon_${ty}`)) { const g = cv.getContext('2d'); g.fillStyle = '#ffd36a'; g.fillRect(3, 3, 10, 10); } return cv; }
 function friendFace(type, skin) { return portraitCell(FRIEND_POR[type], skin || 0, 1); }
-const UP_POP = { cone: '+Wider cone', reach: '+Longer reach', suction: '+Stronger suction', speed: '+Bicycle speed', mask: '+N95 mask' };
+const UP_POP = { cone: '+Wider cone', reach: '+Longer reach', suction: '+Stronger suction', speed: '+Bicycle speed', mask: '+N95: blocks 100 PSI' };
 const GOAL_POP = { elder: 'Thank you!', box: '+1 box', student: '+1 student' };
 function handle(ev) {
   const P = S.player, hx = P.x, hy = P.y - 34;
@@ -3563,7 +3603,7 @@ function handle(ev) {
     if (e.type === 'join') {
       SFX.join(); const F = FRIENDS[e.friend], f = S.chain[S.chain.length - 1];
       if (f) addFx('burst', f.x * K, f.y * K - 10, { dur: 0.6 });
-      if (e.gained) { pop(hx, hy, UP_POP[e.up], '#ffd23f', true); toast(`${F.name}: ${F.upText}!`, 'good', friendFace(e.friend, f && f.skin)); }
+      if (e.gained) { pop(hx, hy, UP_POP[e.up], '#ffd23f', true); toast(e.up === 'mask' ? `${F.name}: N95 mask now blocks ${e.lv * MASK_RESIST} PSI of haze!` : `${F.name}: ${F.upText}!`, 'good', friendFace(e.friend, f && f.skin)); }
       else { pop(hx, hy, e.up === 'mask' ? '+More healing' : '+Helper', '#3ee6a8'); toast(`${F.name} joined your squad`, 'good', friendFace(e.friend, f && f.skin)); }
     } else if (e.type === 'visit') {
       SFX.good(); addFx('sparkle', e.x * K, e.y * K - 16, { dur: 0.6 });
@@ -3611,6 +3651,10 @@ function handle(ev) {
     }
     else if (e.type === 'coreGrow') { SFX.warn(); pop(e.x, e.y - 60, 'Growing!', '#ff6b6b', true); toast('A danger zone is growing! Bring friends inside', 'bad'); }
     else if (e.type === 'helpNext') pop(hx, hy, 'One more task: air drop!', '#ffd23f');
+    else if (e.type === 'airWarn') {
+      SFX.warn(); pop(hx, hy, e.mask >= MASK_MAX ? 'Rest at the CC!' : 'Find a nurse!', '#ff6b6b', true);
+      toast(e.mask ? `PSI ${e.psi} beats your mask! ~${e.secs}s of health left. Rest at the CC` : `Hazardous air! ~${e.secs}s of health left. Find a nurse`, 'bad');
+    }
     else if (e.type === 'rcCall') { pop(e.x, e.y - 34, 'Help needed here!', '#ff9f1c', true); }
     else if (e.type === 'goal') {
       SFX.good();
@@ -3843,7 +3887,8 @@ function openNews() {
   const items = [
     ['PSI', `The haze here reads about <b>PSI ${L.psi}</b>, and up to ${L.core} in danger zones. Thicker haze takes longer to vacuum. A patch is clean below 10.`, '#ffd23f'],
     ['!', `${escapeHtml(st.how)}`, '#4cc9f0'],
-    ['+', `Find friends for upgrades. A <b>nurse</b> gives the only N95 mask${li >= 2 ? ': find one early, the air here is bad' : ''}.`, '#3ee6a8'],
+    ['+', `Find friends for upgrades. Each <b>nurse</b> gives an N95 mask level that blocks <b>${MASK_RESIST} PSI</b> of haze damage (up to ${MASK_MAX * MASK_RESIST}) and heals you.`, '#3ee6a8'],
+    ['♥', `Health drains faster as the PSI rises. At PSI ${L.psi}, a hero with no mask lasts ${(() => { const d = hazeDamage(L.psi); return d <= 0 ? 'as long as they like' : d < 0.5 ? 'a few minutes' : `about <b>${Math.round(100 / d)} seconds</b>`; })()}${L.psi >= 300 ? ': find the nurse near the CC first' : ''}.`, '#ff5fa2'],
     ['☠', `Danger zones need <b>${L.dangerNeed} friends</b> inside with you to tame them, then vacuum them clean.`, '#ff6b6b'],
   ];
   if (L.peat) items.push(['🔥', 'Fires grow and spread fast here. Put them out with firefighters and rain, and block all 3 drains so the peat stops relighting. You win when the zone is clean <b>and</b> every fire is out.', '#ff9f1c']);
@@ -3991,7 +4036,7 @@ const TUT = [
   { id: 'vac', text: 'Your vacuum sucks up haze in the cone in front of you. Walk to the <b>yellow ring</b> and clean it. Thicker haze takes longer!' },
   { id: 'goal', text: 'You need <b>two goals</b> to win. Goal 1: fill the <b>Clean air</b> bar past the yellow tick (a patch is clean below 10 PSI). Goal 2: the task next to it, here <b>checking on 5 neighbours</b>.', auto: 9 },
   { id: 'friend', text: 'Friends make you stronger! Walk to someone with a <b>!</b> to bring them into your squad.' },
-  { id: 'upg', text: 'Each friend gives you an upgrade: see your badges at the bottom left. A <b>nurse</b> gives the only N95 mask!', auto: 8 },
+  { id: 'upg', text: 'Each friend gives you an upgrade: see your badges at the bottom left. A <b>nurse</b> gives an N95 mask that blocks 100 PSI of haze!', auto: 8 },
   { id: 'danger', text: '<b>Red danger zones</b> keep spreading haze and hurt more as they grow. Bring 2 friends inside to tame one, then vacuum it clean.', auto: 10 },
   { id: 'drop', text: 'An <b>air drop</b> is coming! Walk over the crate, then tap the power button (or press <b>Space</b>).' },
   { id: 'end', text: 'Great! Watch the health bar over your head, and rest in the <b>mint ring</b> at the community club to heal. Go clean the zone!', auto: 8 },
@@ -4167,7 +4212,7 @@ function renderInfo() {
     box.appendChild(card(friendIcon('scdf'), 'Friends make you stronger', `<p>Walk up to anyone with a <b>!</b> to bring them into your squad. Every friend gives you an <b>upgrade</b> (two of the same kind stack) and helps in their own way:</p><ul>${rows}</ul><p>Your upgrade badges sit at the bottom left.</p>`, ['Squad', '#4cc9f0']));
     box.appendChild(card(fromSheet('fx_airdrop', 'icon_ice'), 'Danger zones', `<p>Red zones pump out haze and <b>keep growing</b>. The bigger they get, the more they hurt.</p><p>Bring enough friends inside with you to <b>tame</b> one (its ring turns yellow), then vacuum it until no haze is left. A cleared zone stops for good and calls in an air drop.</p>`, ['Watch out', '#ff6b6b']));
     box.appendChild(card(fromSheet('fx_airdrop', 'crate_rain'), 'Air drops and powers', `<p>Every second help task calls in an air drop, supply drops arrive now and then, and clearing a danger zone calls one too. Walk over the crate, then tap the power button or press Space.</p><ul><li><b>Rain cloud</b>: washes haze out of the whole zone and damps fires.</li><li><b>Dry ice</b>: freezes the nearest danger zone and halves its haze.</li><li><b>Strong gust</b>: blows the haze away in front of you, and stops a smog front.</li></ul>`, ['Powers', '#9b5de5']));
-    box.appendChild(card(fromSheet('ui_icons', 'filter'), 'Stay healthy', `<p>Your health bar floats over your head. Haze hurts more the higher the PSI, and a lot more inside a danger zone.</p><p>Only a <b>nurse's N95 mask</b> halves the damage. Nurses also heal you as they follow you, and the <b>mint ring</b> around the community club heals you fast.</p>`, ['Health', '#ff5fa2']));
+    box.appendChild(card(fromSheet('ui_icons', 'filter'), 'Stay healthy', `<p>Your health bar floats over your head. Health drains faster as the PSI rises: slowly at 100, quickly at 300, and at 400 or more a hero with no mask lasts about <b>20 seconds</b>. Danger zones are worse still.</p><p>Each <b>nurse</b> fits you with an N95 mask level that blocks <b>100 PSI</b> of the haze (up to 300 with three nurses): at PSI 400 with two nurses, it feels like PSI 200. Your N95 badge at the bottom left shows how much you block. Nurses also heal you as they follow you, and the <b>mint ring</b> around the community club heals you fast.</p>`, ['Health', '#ff5fa2']));
     box.appendChild(card(fromSheet('ui_icons', 'fire'), 'Fires', `<p>In the West and in Sumatra, fires pour out smoke, <b>grow bigger</b> and <b>spread</b> if nobody fights them. Firefighters' water jets and rain put them out.</p><p>At the source, peat keeps smouldering underground and relights until you block all three drains. Each drain needs 3 friends.</p>`, ['Levels 5–6', '#ff9f1c']));
     box.appendChild(card(fromSheet('ui_icons', 'nozzle'), 'Gear between zones', `<p>After each zone, pick one piece of gear to keep for the rest of your run: a wider nozzle, a longer wand, a turbo motor, running shoes and more. Your friends' upgrades add on top.</p>`, ['Run', '#a6e22e']));
     const replay = document.createElement('button'); replay.className = 'btn alt'; replay.textContent = 'Replay the tutorial next time I play Level 1';
