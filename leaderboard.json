@@ -1,21 +1,5 @@
 {
- "updated": "2026-10-24T14:00:50.496Z",
+ "updated": null,
  "run": [],
- "levels": [
-  [
-   {
-    "name": "Setup test",
-    "user": "sspandayang-star",
-    "score": 1423,
-    "t": 95,
-    "hp": 80,
-    "date": "2026-10-24"
-   }
-  ],
-  [],
-  [],
-  [],
-  [],
-  []
- ]
+ "levels": [[], [], [], [], [], []]
 }
