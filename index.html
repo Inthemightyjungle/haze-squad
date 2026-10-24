@@ -118,9 +118,17 @@ h1 { color: var(--text); text-shadow: 3px 3px 0 var(--ink); }
 .ticons button#toApp { background: linear-gradient(180deg, #4b2fb0, #2b1f6a); }
 .ticons button[hidden] { display: none; } .ticons:has(> button[hidden]) { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 420px) { .ticons button { font-size: 12.5px; padding: 7px 2px 6px; } .ticons canvas { width: 26px; height: 26px; } }
-.trow { display: inline-flex; align-items: center; gap: 8px; }
+.trow { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
+.tpsi, .musicbtn { white-space: nowrap; }
 .musicbtn { pointer-events: auto; width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,.3); background: rgba(18,13,28,.72); color: #fff;
   display: grid; place-items: center; cursor: pointer; padding: 0; font: 700 18px/1 var(--f-pixel); position: relative; }
+.musicbtn .mlbl { display: none; }
+/* until the first tap or click, browsers keep the page silent: the button asks for that tap */
+body.audio-locked .musicbtn[aria-pressed="true"] { width: auto; display: inline-flex; gap: 6px; padding: 0 13px 0 10px; border-radius: 999px; background: var(--sun); color: var(--ink);
+  border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); animation: mpulse 1.3s ease-in-out infinite; }
+body.audio-locked .musicbtn[aria-pressed="true"] .mlbl { display: inline; font: 700 14px/1 var(--f-body); }
+@keyframes mpulse { 50% { transform: scale(1.07); } }
+@media (prefers-reduced-motion: reduce) { body.audio-locked .musicbtn[aria-pressed="true"] { animation: none; } }
 .musicbtn[aria-pressed="false"] { color: #9a92b8; }
 .musicbtn[aria-pressed="false"]::after { content: ""; position: absolute; width: 24px; height: 3px; background: var(--coral); transform: rotate(-45deg); border-radius: 2px; }
 .toggles { justify-content: center; gap: 18px; }
@@ -462,7 +470,7 @@ a.btn { text-decoration: none; display: inline-block; }
     <div class="ttop">
       <div class="logowrap" id="logoWrap"><img class="logo px" id="logoImg" alt="Haze Squad"><h1 class="logo-text" id="logoText" hidden>Haze <span>Squad</span></h1></div>
       <p class="tkicker">Suck up the smog. Save the island.</p>
-      <div class="trow"><p class="tpsi" id="titlePsi"><i></i>Air now <b>PSI 312</b> <span>Hazardous</span></p><button class="musicbtn" aria-pressed="true" aria-label="Music on or off" title="Music"><span class="note" aria-hidden="true">♪</span></button></div>
+      <div class="trow"><p class="tpsi" id="titlePsi"><i></i>Air now <b>PSI 312</b> <span>Hazardous</span></p><button class="musicbtn" aria-pressed="true" aria-label="Music on or off" title="Music"><span class="note" aria-hidden="true">♪</span><span class="mlbl">Tap for music</span></button></div>
     </div>
     <div class="thint" id="titleHint"><span class="hand" aria-hidden="true"></span><span id="titleHintText">Swipe the sky to suck up the haze!</span></div>
     <div class="tbottom" id="titleBottom">
@@ -2408,7 +2416,7 @@ const SFX = {
 // =====================================================================================================
 const TRACKS = { menu: 'pixel-coin-run', news: 'pixel-party', l1: '8-bit-city-pop', l2: 'mask-rush', l3: 'square-wave-arpeggios', l4: 'pixelated-minor-key', l5: 'dryspell', l6: 'pixel-lament' };
 const MUSIC_FADE = 1.5;
-const MUS = { on: store.get('music', true), vol: 0.5, want: null, cur: null, decks: [], unlocked: false, duck: 1, duckTo: 1, ios: /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) };
+const MUS = { on: store.get('musicOn', true), unlockAt: -1e9, vol: 0.5, want: null, cur: null, decks: [], unlocked: false, duck: 1, duckTo: 1, ios: /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) };
 const musicURL = (key) => `music/${TRACKS[key]}.mp3`;
 function musicDeck() {
   let d = MUS.decks.find((x) => !x.busy);
@@ -2426,7 +2434,12 @@ function musicStart(key) {
   if (!d.el.src.endsWith(musicURL(key))) d.el.src = musicURL(key);
   try { d.el.currentTime = 0; } catch (e) { /* not loaded yet */ }
   musicApply(d);
-  const p = d.el.play(); if (p && p.catch) p.catch(() => { d.busy = false; d.target = 0; });
+  const p = d.el.play();
+  if (p && p.catch) p.catch((err) => {
+    d.busy = false; d.target = 0; if (MUS.cur === d) MUS.cur = null;
+    // the browser still says no: wait for the next tap and try again
+    if (err && err.name === 'NotAllowedError') { MUS.unlocked = false; document.body.classList.add('audio-locked'); }
+  });
   return d;
 }
 function musicSet(key) {
@@ -2438,7 +2451,9 @@ function musicSet(key) {
 }
 function musicUnlock() {
   if (MUS.unlocked) return;
-  MUS.unlocked = true;
+  if (navigator.userActivation && !navigator.userActivation.isActive) return;   // not a real tap or key yet (e.g. Tab): wait for one
+  MUS.unlocked = true; MUS.unlockAt = performance.now();
+  document.body.classList.remove('audio-locked');
   if (MUS.want) musicSet(MUS.want);
 }
 function musicApply(d) {
@@ -2459,7 +2474,7 @@ function musicTick(dt) {
   }
 }
 function musicToggle(on) {
-  MUS.on = on; store.set('music', on);
+  MUS.on = on; store.set('musicOn', on);
   if (!on) { for (const d of MUS.decks) if (d.busy) d.target = 0; MUS.cur = null; } else if (MUS.want) { MUS.cur = null; musicSet(MUS.want); }
   document.querySelectorAll('.musicbtn').forEach((b) => b.setAttribute('aria-pressed', String(on)));
   if ($('musicToggle')) $('musicToggle').checked = on;
@@ -4882,10 +4897,16 @@ $('pauseBtn').onclick = () => togglePause();
 $('resumeBtn').onclick = () => togglePause();
 $('soundToggle').onchange = (e) => { sound = e.target.checked; store.set('sound', sound); };
 $('musicToggle').onchange = (e) => { ac(); musicToggle(e.target.checked); };
-document.querySelectorAll('.musicbtn').forEach((b) => { b.onclick = (e) => { e.stopPropagation(); ac(); musicToggle(!MUS.on); }; });
+// a tap on ♪ that is also the page's first tap starts the music; it must not switch it straight off again
+document.querySelectorAll('.musicbtn').forEach((b) => {
+  b.addEventListener('pointerdown', () => { MUS.downAt = performance.now(); }, true);   // runs before the window listener below unlocks the sound
+  b.onclick = (e) => { e.stopPropagation(); ac(); if (MUS.on && MUS.unlockAt >= (MUS.downAt || 0)) { MUS.downAt = Infinity; return; } musicToggle(!MUS.on); };
+});
+if (!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) document.querySelectorAll('.musicbtn .mlbl').forEach((l) => { l.textContent = 'Click for music'; });
+document.body.classList.add('audio-locked');
 sound = store.get('sound', true); $('soundToggle').checked = sound; musicToggle(MUS.on);
 // any first tap or key unlocks audio (browsers only allow sound after a gesture)
-['pointerdown', 'keydown', 'touchend'].forEach((ev) => window.addEventListener(ev, () => { audioCtx(); musicUnlock(); }, { once: false, passive: true }));
+['pointerdown', 'mousedown', 'pointerup', 'click', 'keydown', 'touchend'].forEach((ev) => window.addEventListener(ev, () => { audioCtx(); musicUnlock(); }, { once: false, passive: true }));
 $('retryBtn').onclick = () => { $('pauseSheet').hidden = true; startLevel(true); };
 $('quitBtn').onclick = () => { $('pauseSheet').hidden = true; run = newRun((Math.random() * 1e9) | 0); store.set('run', run); show('map'); };
 $('newRunBtn').onclick = () => { run = newRun((Math.random() * 1e9) | 0); store.set('run', run); show('map'); };

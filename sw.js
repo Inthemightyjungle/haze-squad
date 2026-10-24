@@ -1,7 +1,7 @@
 // Haze Squad's service worker (GitHub Pages only): the game works offline once it has been opened.
 // The page is network-first (so updates arrive), icons are cache-first, music is cached the first time it plays,
 // and the leaderboard is always fetched fresh when online.
-const V = 'haze-squad-4e6cb4f767';
+const V = 'haze-squad-27c71d99e2';
 const CORE = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {
@@ -13,7 +13,8 @@ self.addEventListener('fetch', (e) => {
   if (u.pathname.endsWith('/leaderboard.json')) { e.respondWith(fetch(req).catch(() => caches.match(req, { ignoreSearch: true }))); return; }
   if (u.pathname.includes('/music/')) { e.respondWith(music(req)); return; }
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then((res) => { if (res.ok) { const cp = res.clone(); caches.open(V).then((c) => c.put('./', cp)); } return res; })
+    // always check for a newer page, so an update reaches players straight away
+    e.respondWith(fetch(new Request(req.url, { cache: 'no-cache', credentials: 'same-origin' })).then((res) => { if (res.ok) { const cp = res.clone(); caches.open(V).then((c) => c.put('./', cp)); } return res; })
       .catch(() => caches.match('./')));
     return;
   }
