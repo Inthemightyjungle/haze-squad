@@ -13,6 +13,8 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
 | `.github/workflows/score.yml` | The scoreboard robot (a GitHub Action). |
 | `scripts/record-score.js` | Checks a posted score, recomputes it and merges it into `leaderboard.json`. |
 | `scripts/name-filter.js` | The name filter, shared with the game. |
+| `music/` | The soundtrack, 64 kbps MP3s. Each track loads only when it's needed and crossfades over 1.5 s. |
+| `manifest.webmanifest`, `sw.js`, `icons/` | The installable app: an icon, home-screen launch and offline play once opened. |
 
 ## Switch it on (one time)
 
