@@ -1,0 +1,65 @@
+# The leaderboard robot. The game posts each player's best scores to a public relay (an ntfy.sh topic) on its own;
+# every 10 minutes this reads what's new, checks and recomputes every score (scripts/pull-scores.js),
+# commits leaderboard.json if anything changed, and asks GitHub Pages to republish.
+name: Leaderboard
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      selftest:
+        description: 'Post a test score to a separate test topic and read it back (does not touch the board)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: leaderboard
+  cancel-in-progress: false
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Self test (relay round trip on a test topic)
+        if: inputs.selftest
+        run: |
+          T="https://ntfy.sh/hazesquad-sg-scores-v2-k7q3-selftest-$GITHUB_RUN_ID"
+          curl -sS -o /dev/null -w "post: HTTP %{http_code}\n" -H "Origin: https://example.github.io" -d '{"v":2,"uid":"selftestselftest0001","name":"Self test","lv":[{"t":90,"hp":80},null,null,null,null,null]}' "$T"
+          curl -sS -D - -o /dev/null -X OPTIONS -H "Origin: https://example.github.io" -H "Access-Control-Request-Method: POST" "$T" | grep -i "access-control" || true
+          echo '{}' > "$RUNNER_TEMP/lb.json"
+          RELAY="$T" FILE="$RUNNER_TEMP/lb.json" node scripts/pull-scores.js
+          cat "$RUNNER_TEMP/lb.json"
+
+      - name: Add new scores
+        if: ${{ !inputs.selftest }}
+        run: |
+          git config user.name "haze-squad-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="${GITHUB_REF_NAME:-main}"
+          for i in 1 2 3 4; do
+            git fetch -q origin "$BRANCH"
+            git reset -q --hard "origin/$BRANCH"
+            node scripts/pull-scores.js
+            git add leaderboard.json
+            if git diff --cached --quiet; then echo "nothing to commit"; echo "PUSHED=" >> "$GITHUB_ENV"; break; fi
+            git commit -q -m "Leaderboard: new scores"
+            if git push -q origin "HEAD:$BRANCH"; then echo "PUSHED=1" >> "$GITHUB_ENV"; break; fi
+            sleep $((RANDOM % 6 + 3))
+          done
+
+      - name: Republish the site
+        if: ${{ !inputs.selftest && env.PUSHED == '1' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" --silent || echo "Pages will pick up the change on its own"

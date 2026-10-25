@@ -10,41 +10,40 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
 | --- | --- |
 | `index.html` | The whole game in one file (art, sound and code inside). |
 | `leaderboard.json` | The world leaderboard. The game reads it; only the robot below writes it. |
-| `.github/workflows/score.yml` | The scoreboard robot (a GitHub Action). |
-| `scripts/record-score.js` | Checks a posted score, recomputes it and merges it into `leaderboard.json`. |
+| `.github/workflows/leaderboard.yml` | The leaderboard robot (a GitHub Action that runs every 10 minutes). |
+| `scripts/pull-scores.js` | Reads new scores, checks and recomputes them, and merges them into `leaderboard.json`. |
 | `scripts/name-filter.js` | The name filter, shared with the game. |
-| `music/` | The soundtrack, 64 kbps MP3s. Each track loads only when it's needed and crossfades over 1.5 s. |
-| `manifest.webmanifest`, `sw.js`, `icons/` | The installable app: an icon, home-screen launch and offline play once opened. |
 
 ## Switch it on (one time)
 
 1. **Settings → Pages**: under *Build and deployment*, pick **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**. The game goes live at https://sspandayang-star.github.io/haze-squad/ within a few minutes.
-2. **Settings → General → Features**: make sure **Issues** is ticked (it is by default).
-3. **Settings → Actions → General**: allow actions to run (the default). The workflow asks for its own write permissions, so you don't need to change *Workflow permissions*.
+2. **Settings → Actions → General**: allow actions to run (the default). The workflow asks for its own write permissions, so you don't need to change *Workflow permissions*.
 
 ## How the leaderboard works
 
 - Each level's **speed score** = `1000 × par time ÷ your time` + `2 × health left`. Par times: 2:00, 2:10, 3:20, 2:30, 3:30, 3:30.
-- A **full run** score is the sum of all six levels, and only counts if no level was retried.
-- On the game's **Leaderboard** screen, **Post my best scores** opens a ready-made GitHub issue titled `Score: …`. The player presses **Create** (a free GitHub account is needed).
-- The workflow then:
-  - reads the numbers in the issue;
+- A player's **leaderboard score** is their best speed score in each zone, added up. The board is one simple list: rank, name, score.
+- Players don't post anything. When they set a new best, the game sends their bests to a public relay ([ntfy.sh](https://ntfy.sh), topic `hazesquad-sg-scores-v2-k7q3`) with their hero name and an anonymous random id for their device.
+- Every 10 minutes the workflow:
+  - reads what's new on the relay;
   - throws out anything impossible (for example a level faster than 40 seconds);
-  - recomputes the scores itself;
-  - keeps each GitHub account's best entry on each board, top 50;
-  - commits `leaderboard.json`, replies with the player's ranks and closes the issue.
-- GitHub Pages republishes within a minute or two, and the game shows the new board.
+  - recomputes every score itself;
+  - keeps one row per device (shown only as a short hash of the id) with its best in each zone, top 100;
+  - commits `leaderboard.json` and asks GitHub Pages to republish.
+- The player's own row shows straight away on their device; everyone else sees it after the next robot run (usually 10 to 20 minutes). If a score ever goes missing, the game sends it again when the player opens the board.
 
-**Names.** The game refuses names with sexual, vulgar, racist, abusive or violent words, in English, Malay, Singlish, Mandarin and Tamil. That includes spaced-out letters, leetspeak and lookalike letters. The robot runs the same check (`scripts/name-filter.js`): a bad name goes on the board as **Hero**, and the issue's title and text are wiped.
+**Names.** The game refuses names with sexual, vulgar, racist, abusive or violent words, in English, Malay, Singlish, Mandarin and Tamil. That includes spaced-out letters, leetspeak and lookalike letters. The robot runs the same check (`scripts/name-filter.js`): a bad name goes on the board as **Hero**.
 
-If you change the par times in the game (`PAR` in the game code), change `PAR` in `scripts/record-score.js` to match.
+**Test the relay.** **Actions → Leaderboard → Run workflow**, tick *selftest*: it posts a test score to a separate test topic, reads it back and prints the result, without touching the board.
+
+If you change the par times in the game (`PAR` in the game code), change `PAR` in `scripts/pull-scores.js` to match.
 
 To reset the board, replace `leaderboard.json` with:
 
 ```json
-{ "updated": null, "run": [], "levels": [[], [], [], [], [], []] }
+{ "v": 2, "updated": null, "since": 0, "players": [] }
 ```
 
 ## Elsewhere
 
-Opened anywhere else (a file on your computer, or another host), the game keeps scores on that device. On claude.ai, the published artifact keeps a shared board for everyone who opens it.
+Opened anywhere else (a file on your computer, or another host), the game keeps your score on that device. On claude.ai, the published artifact keeps a shared board for everyone who opens it, and scores go up by themselves there too.
