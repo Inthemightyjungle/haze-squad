@@ -316,10 +316,10 @@ body.audio-locked .musicbtn[aria-pressed="true"] .mlbl { display: inline; font: 
   padding: max(10px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px));
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start;
 }
-.panel { pointer-events: none; display: grid; gap: 6px; width: min(300px, 64vw); box-sizing: border-box; padding: 7px 9px 8px; background: var(--hud); border: 3px solid var(--ink); box-shadow: inset 0 0 0 2px var(--grape); border-radius: 10px; }
+.panel { pointer-events: none; display: grid; gap: 6px; width: min(320px, 66vw); box-sizing: border-box; padding: 7px 9px 8px; background: var(--hud); border: 3px solid var(--ink); box-shadow: inset 0 0 0 2px var(--grape); border-radius: 10px; }
 .meter { display: grid; grid-template-columns: 88px minmax(0, 1fr) auto; align-items: center; gap: 7px; font-family: var(--f-pixel); font-weight: 700; font-size: 18px; }
 .meter .lbl { color: var(--muted); font-size: 14px; white-space: nowrap; }
-.meter .val { font-variant-numeric: tabular-nums; min-width: 2.6em; text-align: right; }
+.meter .val { font-family: var(--f-body); font-variant-numeric: tabular-nums; min-width: 2.6em; text-align: right; }   /* digits in the readable face: the pixel 5 looks like S */
 .track { position: relative; height: 14px; background: #0d0a1c; border-radius: 3px; box-shadow: 0 0 0 2px var(--ink); }
 .track.clean i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 3px; background: repeating-linear-gradient(90deg, #3ee6a8 0 6px, #2fcf93 6px 8px); transition: width .25s; }
 .track.clean b { position: absolute; top: -5px; bottom: -5px; width: 4px; background: var(--sun); box-shadow: 0 0 0 1px var(--ink); }
@@ -373,7 +373,7 @@ a.btn { text-decoration: none; display: inline-block; }
 .powerbtn span { line-height: 1; }
 @keyframes glowpulse { 50% { box-shadow: 0 5px 0 var(--ink), 0 0 0 6px rgba(255,210,63,.55), inset 0 -6px 0 rgba(0,0,0,.18); } }
 .banner { position: absolute; left: 50%; top: 27%; transform: translate(-50%, -50%); pointer-events: none; font-family: var(--f-pixel); font-weight: 700; font-size: clamp(22px, 5vw, 34px); color: var(--sun); text-shadow: 3px 3px 0 var(--ink), -1px -1px 0 var(--ink), 1px -1px 0 var(--ink), -1px 1px 0 var(--ink); text-align: center; white-space: nowrap; opacity: 0; }
-.banner small { display: block; font-size: .5em; font-weight: 700; color: #fff; margin-top: 4px; white-space: normal; text-shadow: 2px 2px 0 var(--ink); }
+.banner small { display: block; width: max-content; max-width: min(88vw, 470px); margin: 8px auto 0; padding: 5px 12px 6px; font-family: var(--f-body); font-size: clamp(13px, 2.3vw, 16px); line-height: 1.3; font-weight: 700; color: #fff; white-space: normal; text-shadow: none; background: rgba(27,21,51,.9); border: 2px solid var(--ink); border-radius: 10px; }
 .banner.show { animation: bannerin 1.7s forwards; }
 @keyframes bannerin { 0% { opacity: 0; transform: translate(-50%, -40%) scale(.7); } 14% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 22%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -58%); } }
 .hud .right { display: grid; gap: 8px; justify-items: end; pointer-events: auto; }
@@ -384,10 +384,54 @@ a.btn { text-decoration: none; display: inline-block; }
 .ck { display: inline-grid; place-items: center; width: 13px; height: 13px; margin-right: 4px; border: 2px solid var(--muted); border-radius: 3px; font-style: normal; font-size: 10px; line-height: 1; vertical-align: -1px; color: var(--ink); }
 .ck.done { background: var(--mint); border-color: var(--mint); }
 .ck.done::after { content: "✓"; font-weight: 700; }
+.ck[data-n]:not(.done)::after { content: attr(data-n); color: var(--muted); font-weight: 700; font-family: var(--f-body); }
+/* goal 2: its own row under the clean-air bar, in words, with a dot per task */
+.goal2 { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px; font-family: var(--f-body); font-weight: 700; font-size: 14px; color: var(--text); }
+.goal2 .g2l { display: flex; align-items: center; gap: 3px; min-width: 0; white-space: nowrap; }
+.goal2 .g2l span { overflow: hidden; text-overflow: ellipsis; }
+.goal2 canvas { width: 20px; height: 20px; flex: none; }
+.goal2 .val { font-family: var(--f-body); font-variant-numeric: tabular-nums; font-size: 17px; min-width: 2.4em; text-align: right; }
+.goal2 .val em { font-style: normal; font-size: 12px; color: var(--sun); }
+.goal2.done .g2l span, .goal2.done .val { color: var(--mint); }
+.pips { display: inline-flex; gap: 3px; }
+.pips i { width: 8px; height: 8px; border-radius: 2px; background: #0d0a1c; box-shadow: 0 0 0 2px var(--ink); }
+.pips i.on { background: var(--mint); }
+#hudPanel.goalflash { animation: goalflash 1.6s ease-out; }
+@keyframes goalflash { 0%, 45% { box-shadow: inset 0 0 0 2px var(--grape), 0 0 0 5px var(--sun); } 100% { box-shadow: inset 0 0 0 2px var(--grape), 0 0 0 0 rgba(255,210,63,0); } }
+/* the mission card at the start of each level */
+.goalcard { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(13,10,28,.5); pointer-events: auto; animation: gcin .3s ease-out; }
+.goalcard[hidden] { display: none; }
+.goalcard.away { animation: gcout .34s ease-in forwards; }
+.goalcard .gcin { width: min(470px, 100%); background: var(--card); color: var(--card-ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 8px 0 var(--ink); padding: 16px 18px 14px; }
+.gckick { margin: 0; font-family: var(--f-body); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--grape); }
+.goalcard h2 { margin: 2px 0 12px; font-family: var(--f-pixel); font-size: 30px; line-height: 1.1; color: var(--card-ink); }
+.gclist { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; text-align: left; }
+.gclist li { display: grid; grid-template-columns: 28px 30px minmax(0, 1fr); gap: 8px; align-items: start; background: #fff; border: 2px solid var(--ink); border-radius: 12px; padding: 9px 10px; color: var(--card-ink); }
+.gcn { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--sun); border: 2px solid var(--ink); font-style: normal; font-family: var(--f-body); font-weight: 700; font-size: 15px; color: var(--ink); }
+.gclist li:nth-child(2) .gcn { background: var(--sky); }
+.gclist li.done { background: #e6fff4; } .gclist li.done .gcn { background: var(--mint); }
+.gci { width: 30px; height: 30px; image-rendering: pixelated; }
+.gct b { display: block; font-family: var(--f-body); font-size: 17px; line-height: 1.25; }
+.gct em { display: block; font-style: normal; font-weight: 700; font-size: 13px; color: #127a55; margin-top: 1px; }
+.gct span { display: block; font-size: 13.5px; line-height: 1.35; color: var(--card-muted); margin-top: 2px; }
+.gcfoot { margin: 12px 0 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; }
+.gcfoot span { color: var(--grape); font-weight: 700; animation: gcpulse 1.2s ease-in-out infinite; }
+@keyframes gcin { from { opacity: 0; transform: translateY(12px); } }
+@keyframes gcout { to { opacity: 0; transform: translateY(-40px) scale(.92); } }
+@keyframes gcpulse { 50% { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .goalcard, .goalcard.away, .gcfoot span, #hudPanel.goalflash { animation: none; } }
+.gclist.mini { margin: 4px 0 6px; } .gclist.mini li { padding: 7px 9px; grid-template-columns: 26px 26px minmax(0, 1fr); } .gclist.mini .gcn { width: 26px; height: 26px; font-size: 14px; } .gclist.mini .gci { width: 26px; height: 26px; } .gclist.mini .gct b { font-size: 15px; }
+.mgoals { display: grid; gap: 7px; }
+.mgh { margin: 0; font-family: var(--f-pixel); font-size: 20px; color: var(--card-ink); }
+.mgsub { margin: 0; font-family: var(--f-body); font-size: 14px; font-weight: 700; color: var(--grape); }
+.cgoals { list-style: none; margin: 2px 0 8px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.cgoals li { background: #e6fff4; border: 2px solid var(--ink); border-radius: 999px; padding: 3px 11px; font-family: var(--f-body); font-weight: 700; font-size: 13px; color: #127a55; }
+.banner.goal small { color: var(--sun); }
+.banner.goal.show { animation-duration: 3.8s; }
 .panel .chip.side.done { background: #1d5a45; }
 /* one short message at a time, under the HUD */
 .ticker { position: absolute; left: 50%; top: calc(max(10px, env(safe-area-inset-top, 0px)) + 104px); transform: translateX(-50%); pointer-events: none; width: max-content; max-width: min(92vw, 420px); }
-.ticker > div { display: flex; align-items: center; gap: 6px; font-family: var(--f-pixel); font-weight: 700; font-size: 14px; line-height: 1.15; color: var(--text); background: var(--hud); border: 2px solid var(--ink); border-left: 6px solid var(--mint); border-radius: 8px; padding: 4px 10px 4px 6px; animation: tick 2.8s forwards; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ticker > div { display: flex; align-items: center; gap: 6px; font-family: var(--f-body); font-weight: 700; font-size: 14px; line-height: 1.15; color: var(--text); background: var(--hud); border: 2px solid var(--ink); border-left: 6px solid var(--mint); border-radius: 8px; padding: 4px 10px 4px 6px; animation: tick 2.8s forwards; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ticker > div span { overflow: hidden; text-overflow: ellipsis; }
 .ticker > div.warn { border-left-color: var(--sun); } .ticker > div.bad { border-left-color: var(--coral); }
 .ticker > div canvas { width: 22px; height: 22px; flex: none; }
@@ -405,7 +449,7 @@ a.btn { text-decoration: none; display: inline-block; }
 .coach.done { border-color: #12855c; }
 .hint { position: absolute; left: 50%; top: 50%; transform: translate(-50%, 74px); pointer-events: none; font-family: var(--f-pixel); font-weight: 700; font-size: 18px; color: #fff; text-shadow: 0 2px 0 #000, 0 0 6px #000; text-align: center; opacity: .95; }
 .loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); font-family: var(--f-pixel); font-size: 20px; z-index: 50; }
-@media (max-width: 420px) { #minimap { width: 84px !important; height: 62px !important; } .meter { grid-template-columns: 78px minmax(0, 1fr) auto; font-size: 16px; gap: 6px; } .meter .lbl { font-size: 12.5px; } .track { height: 12px; } .ticker > div { font-size: 13px; } .coach { bottom: calc(max(14px, env(safe-area-inset-bottom, 0px)) + 104px); } .coach p { font-size: 14.5px; } }
+@media (max-width: 420px) { .goal2 .pips { display: none; } .goal2 { font-size: 12.5px; } .goal2 canvas { width: 17px; height: 17px; } .goalcard h2 { font-size: 26px; } .gct b { font-size: 16px; } #minimap { width: 84px !important; height: 62px !important; } .meter { grid-template-columns: 78px minmax(0, 1fr) auto; font-size: 16px; gap: 6px; } .meter .lbl { font-size: 12.5px; } .track { height: 12px; } .ticker > div { font-size: 13px; } .coach { bottom: calc(max(14px, env(safe-area-inset-bottom, 0px)) + 104px); } .coach p { font-size: 14.5px; } }
 
 /* Sheets over the game */
 .sheet-wrap { position: fixed; inset: 0; z-index: 30; background: rgba(27,21,51,.82); overflow-y: auto; display: grid; place-items: center;
@@ -565,7 +609,7 @@ a.btn { text-decoration: none; display: inline-block; }
     </article>
     <div class="mission win">
       <p class="kicker" id="missionKicker">Level 1 · North</p>
-      <h3 id="missionGoal"></h3>
+      <div class="mgoals"><p class="mgh">Your goals</p><ol class="gclist brief" id="missionGoal"></ol><p class="mgsub">You need both to finish the level.</p></div>
       <ul class="mlist" id="missionList"></ul>
     </div>
     <button class="btn big" id="startLevel">Start level</button>
@@ -577,9 +621,14 @@ a.btn { text-decoration: none; display: inline-block; }
   <div class="hud">
     <div class="panel" id="hudPanel">
       <div class="meter" title="Clean the zone: get this bar past the goal mark">
-        <span class="lbl"><em class="ck" id="g1ck" title="Goal 1"></em>Clean air</span>
+        <span class="lbl"><em class="ck" id="g1ck" data-n="1" title="Goal 1"></em>Clean air</span>
         <div class="track clean" id="cleanTrack"><i id="cleanFill"></i><b id="cleanMark"></b></div>
         <span class="val" id="cleanVal">0%</span>
+      </div>
+      <div class="goal2" id="g2row" title="Goal 2">
+        <span class="g2l"><em class="ck" id="g2ck" data-n="2"></em><canvas id="goalIcon" class="px" width="16" height="16" aria-hidden="true"></canvas><span id="g2lbl">Goal 2</span></span>
+        <span class="pips" id="g2pips" aria-hidden="true"></span>
+        <span class="val" id="helpText">0/5</span>
       </div>
       <div class="meter">
         <span class="lbl">PSI</span>
@@ -590,7 +639,6 @@ a.btn { text-decoration: none; display: inline-block; }
         <span class="chip" id="coreChip" title="Danger zones"></span>
         <span class="chip fire" id="fireChip" hidden title="Fires burning"><i></i><span id="fireText">0</span></span>
         <span class="chip time" id="timeChip"><span class="cl">Time</span><span id="timeText">0:00</span></span>
-        <span class="chip side" id="helpChip" title="Goal 2"><em class="ck" id="g2ck"></em><canvas id="goalIcon" class="px" width="16" height="16" aria-hidden="true"></canvas><span id="helpText">0/5</span></span>
       </div>
     </div>
     <div class="right" id="hudRight">
@@ -602,6 +650,14 @@ a.btn { text-decoration: none; display: inline-block; }
   <div class="coach" id="coach" hidden><div class="ctop"><span class="cstep" id="coachStep">1/6</span><button class="cskip" id="coachSkip">Skip tutorial</button></div><p id="coachText"></p></div>
   <button class="powerbtn" id="powerBtn" hidden aria-label="Use power"><canvas id="powerIcon" class="px" width="16" height="16" aria-hidden="true"></canvas><span id="powerName">Rain</span><b id="powerCount">1</b></button>
   <div class="banner" id="banner" aria-live="polite"></div>
+  <div class="goalcard" id="goalCard" hidden role="dialog" aria-labelledby="gcTitle">
+    <div class="gcin">
+      <p class="gckick" id="gcKick">Level 1</p>
+      <h2 id="gcTitle">First Haze</h2>
+      <ol class="gclist" id="gcList"></ol>
+      <p class="gcfoot"><b>Do both to clear the zone.</b> <span id="gcGo">Tap or move to start</span></p>
+    </div>
+  </div>
   <div class="hint" id="moveHint">Drag anywhere to move</div>
   <div class="ticker" id="toast" aria-live="polite"></div>
 </section>
@@ -618,6 +674,7 @@ a.btn { text-decoration: none; display: inline-block; }
 <div class="sheet-wrap" id="pauseSheet" hidden>
   <div class="sheet win">
     <h2>Paused</h2>
+    <ol class="gclist mini" id="pauseGoals" aria-label="Your goals"></ol>
     <button class="btn big" id="resumeBtn">Resume</button>
     <div class="row"><button class="btn alt" id="pauseHow">How to play</button><button class="btn pink" id="pauseFacts">Haze facts</button></div>
     <div class="row toggles"><label class="toggle"><input type="checkbox" id="musicToggle" checked> Music</label><label class="toggle"><input type="checkbox" id="soundToggle" checked> Sound effects</label></div>
@@ -630,6 +687,7 @@ a.btn { text-decoration: none; display: inline-block; }
     <canvas class="art px" id="clearArt" width="240" height="48" aria-hidden="true"></canvas>
     <p class="kicker" id="clearKicker">Level clear</p>
     <h2 id="clearTitle"></h2>
+    <ul class="cgoals" id="clearGoals" aria-label="Goals"></ul>
     <div class="scorebox" id="clearScore"></div>
     <div class="lesson"><b>You learned</b><span id="clearLesson"></span></div>
     <div class="stats" id="clearStats"></div>
@@ -1356,17 +1414,17 @@ const FRIENDS = {
 // target: share of the zone's ground that must be cleared (below 10 PSI) to win.
 const LEVELS = [
   { id: 'north', zone: 'North', place: 'Woodlands', title: 'First Haze', layout: 'north', psi: 110, edge: 150, core: 260, target: 0.45,
-    goal: { type: 'visit', count: 5, label: 'Check on 5 older neighbours' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 2, dangerNeed: 2, wind: [0, 16] },
+    goal: { type: 'visit', count: 5, label: 'Check on 5 older neighbours', short: 'Visit neighbours', unit: ['neighbour visited', 'neighbours visited'], how: 'Walk up to older neighbours marked with a ! to check on them.' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 2, dangerNeed: 2, wind: [0, 16] },
   { id: 'east', zone: 'East', place: 'Tampines', title: 'Mask Rush', layout: 'east', psi: 160, edge: 210, core: 360, target: 0.48,
-    goal: { type: 'deliver', count: 5, label: 'Bring 5 N95 mask boxes to the CC' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 2, dangerNeed: 3, wind: [-20, 0] },
+    goal: { type: 'deliver', count: 5, label: 'Bring 5 N95 mask boxes to the CC', short: 'Deliver mask boxes', unit: ['box delivered', 'boxes delivered'], how: 'Pick up boxes of N95 masks and carry them back to the community club (CC). You can carry 3 at a time.' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 2, dangerNeed: 3, wind: [-20, 0] },
   { id: 'central', zone: 'Central', place: 'Toa Payoh', title: 'Schools Closed', layout: 'central', psi: 230, edge: 290, core: 480, target: 0.5,
-    goal: { type: 'escort', count: 6, label: 'Walk 6 students to the shelter' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 3, dangerNeed: 3, wind: [-12, -12] },
+    goal: { type: 'escort', count: 6, label: 'Walk 6 students to the shelter', short: 'Students to shelter', unit: ['student safe', 'students safe'], how: 'Reach students at schools around Toa Payoh and they follow you. Lead them back to the clean-air shelter at the CC.' }, friends: { nea: 2, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 3, dangerNeed: 3, wind: [-12, -12] },
   { id: 'south', zone: 'South', place: 'Marina Bay', title: 'Lights Out', layout: 'south', psi: 300, edge: 360, core: 600, dark: true, target: 0.5,
-    goal: { type: 'activate', count: 4, label: 'Restart 4 shelter generators' }, friends: { nea: 3, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 3, dangerNeed: 4, wind: [0, -18] },
+    goal: { type: 'activate', count: 4, label: 'Restart 4 shelter generators', short: 'Restart generators', unit: ['generator on', 'generators on'], how: 'Stand next to each generator for a few seconds until it powers on.' }, friends: { nea: 3, rc: 2, nurse: 2, scdf: 2, tech: 2 }, dangers: 3, dangerNeed: 4, wind: [0, -18] },
   { id: 'west', zone: 'West', place: 'Jurong & Tengah', title: 'Dry Spell', layout: 'west', psi: 380, edge: 440, core: 700, fires: 6, spread: true, target: 0.52,
-    goal: { type: 'fires', count: 6, label: 'Put out 6 grass fires' }, friends: { scdf: 3, nea: 2, rc: 2, nurse: 2, tech: 2 }, dangers: 2, dangerNeed: 4, wind: [22, 0] },
+    goal: { type: 'fires', count: 6, label: 'Put out 6 grass fires', short: 'Put out grass fires', unit: ['fire out', 'fires out'], how: 'Bring SCDF firefighters close to a fire and they spray it. Rain helps too. Your vacuum can’t put fires out.' }, friends: { scdf: 3, nea: 2, rc: 2, nurse: 2, tech: 2 }, dangers: 2, dangerNeed: 4, wind: [22, 0] },
   { id: 'source', zone: 'Sumatra', place: 'Peatland, Sumatra', title: 'The Source', layout: 'source', psi: 480, edge: 560, core: 900, fires: 6, peat: true, bigFire: true, spread: true, target: 0.5,
-    goal: { type: 'final', count: 3, label: 'Block 3 drains and put out every fire' }, friends: { scdf: 4, nea: 2, rc: 2, nurse: 3, tech: 2 }, dangers: 2, dangerNeed: 4, wind: [-18, 10] },
+    goal: { type: 'final', count: 3, label: 'Block 3 drains and put out every fire', short: 'Drains & fires', unit: ['drain blocked', 'drains blocked'], how: 'Bring 3 friends to each drain to dam it, then put out every fire with firefighters and rain.' }, friends: { scdf: 4, nea: 2, rc: 2, nurse: 3, tech: 2 }, dangers: 2, dangerNeed: 4, wind: [-18, 10] },
 ];
 // Hero stats. Each has a level 0-4: gear picked between levels plus friends in your line (up to 2 of each type).
 const coneHalf = (n) => 0.61 + 0.2 * n;             // radians each side of the aim: 70° wide, then 93°, 116°, 139°, 162°
@@ -3712,15 +3770,22 @@ function updateHud() {
   if (fl >= 0) { $('fireText').textContent = fl; $('fireChip').classList.toggle('hot', fl >= 12); $('fireChip').title = `${fl} fires still burning`; }
   // help tasks: each one counts, and every second one calls in an air drop
   const gl = S.L.goal;
-  if (hudCache.goal !== gl.type) { hudCache.goal = gl.type; iconTo($('goalIcon'), 'ui_icons', GOAL_ICON[gl.type]); $('helpChip').title = `${gl.label}. Every second task calls in an air drop`; }
+  if (hudCache.goal !== gl.type) { hudCache.goal = gl.type; iconTo($('goalIcon'), 'ui_icons', GOAL_ICON[gl.type]); $('g2lbl').textContent = gl.short || gl.label; }
   let extra = '';
   if (S.carry.length) extra = ` <em>+${S.carry.length}</em>`;
-  if (S.L.peat) $('helpText').innerHTML = `${S.dams}/3 drains`;
-  else $('helpText').innerHTML = `${Math.min(S.progress, S.goal)}/${S.goal}${extra}`;
+  const pn = S.L.peat ? 3 : S.goal, pd = S.L.peat ? S.dams : Math.min(S.progress, S.goal);
+  $('helpText').innerHTML = `${pd}/${pn}${extra}`;
+  if (hudCache.pips !== pn + ':' + pd) { hudCache.pips = pn + ':' + pd; $('g2pips').innerHTML = Array.from({ length: pn }, (_, k) => `<i class="${k < pd ? 'on' : ''}"></i>`).join(''); }
+  // every task done counts out loud, with how many are left
+  if (hudCache.prog == null) hudCache.prog = S.progress;
+  else if (S.progress > hudCache.prog) {
+    hudCache.prog = S.progress;
+    if (!S.L.peat && S.progress < S.goal) { const u = gl.unit || ['done', 'done'], n = S.progress; toast(`✓ ${n} of ${S.goal} ${n === 1 ? u[0] : u[1]}: ${S.goal - n} to go`, 'good'); }
+  }
   { const tt = $('timeText'), par = PAR[run.li] || 200; tt.textContent = fmtTime(S.t); $('timeChip').classList.toggle('over', S.t > par); $('timeChip').title = `Time. Par ${fmtTime(par)}: finish faster for a bigger speed score`; }
   $('g1ck').classList.toggle('done', !!S.primaryDone); $('g2ck').classList.toggle('done', !!S.secondaryDone);
-  $('helpChip').classList.toggle('done', !!S.secondaryDone);
-  $('helpChip').title = `Goal 2: ${gl.label}${S.secondaryDone ? ' (done)' : ''}`;
+  $('g2row').classList.toggle('done', !!S.secondaryDone);
+  $('g2row').title = `Goal 2: ${gl.label}${S.secondaryDone ? ' (done)' : ''}`;
   // squad: up to 8 faces, then a count
   const sq = S.chain.map((f) => f.type + f.skin).join(',');
   if (hudCache.squad !== sq) {
@@ -3800,10 +3865,52 @@ function startLevel(practice) {
   $('toast').innerHTML = '';
   show('game');
   buildWorld();
-  const L = LEVELS[run.li];
-  banner(`${L.zone}: ${L.title}`, `Goal 1: clear ${Math.round(L.target * 100)}% of the zone · Goal 2: ${L.goal.label.charAt(0).toLowerCase() + L.goal.label.slice(1)}`);
+  openGoalCard();
+}
+// ---------- goals: the same words on the mission card, the HUD, the pause menu, the news briefing and the clear sheet ----------
+function goalList(L) {
+  return [
+    { n: 1, icon: 'nozzle', title: `Clean the air to ${Math.round(L.target * 100)}%`, how: 'Vacuum the haze until the Clean air bar passes the yellow tick. Ground counts as clean below PSI 10.' },
+    { n: 2, icon: GOAL_ICON[L.goal.type], title: L.goal.label, how: L.goal.how },
+  ];
+}
+function goalState() {
+  const L = S.L, cl = Math.round(clamp(S.clean, 0, 1) * 100), tg = Math.round(S.target * 100);
+  const p2 = L.peat ? `${S.dams}/3 drains blocked · ${S.firesLeft ?? 0} fires left` : `${Math.min(S.progress, S.goal)} of ${S.goal} ${(L.goal.unit || ['done', 'done'])[1]}`;
+  return [{ done: !!S.primaryDone, prog: `${cl}% clean so far` }, { done: !!S.secondaryDone, prog: p2 }];
+}
+function goalItems(el, L, st, how = true) {
+  el.innerHTML = '';
+  goalList(L).forEach((g, k) => {
+    const li = document.createElement('li'); if (st && st[k].done) li.className = 'done';
+    const n = document.createElement('i'); n.className = 'gcn'; n.textContent = st && st[k].done ? '✓' : g.n;
+    const ic = mk(16, 16); ic.className = 'px gci'; iconTo(ic, 'ui_icons', g.icon);
+    const tx = document.createElement('div'); tx.className = 'gct';
+    tx.innerHTML = `<b>${escapeHtml(g.title)}</b>${st ? `<em>${escapeHtml(st[k].done ? 'Done!' : st[k].prog)}</em>` : ''}${how ? `<span>${escapeHtml(g.how)}</span>` : ''}`;
+    li.append(n, ic, tx); el.appendChild(li);
+  });
+}
+// the mission card: both goals in words before the clock starts; the first move, tap or key closes it
+const GC = { open: false, t: 0 };
+function openGoalCard() {
+  const L = S.L;
+  $('gcKick').textContent = `Level ${run.li + 1} · ${L.zone} · ${L.place}`;
+  $('gcTitle').textContent = L.title;
+  goalItems($('gcList'), L, null);
+  $('gcGo').textContent = window.matchMedia && window.matchMedia('(pointer: coarse)').matches ? 'Tap to start ▶' : 'Click or press a key to start ▶';
+  GC.open = true; GC.t = 0;
+  const c = $('goalCard'); c.classList.remove('away'); c.hidden = false;
+}
+function closeGoalCard() {
+  if (!GC.open) return;
+  GC.open = false;
+  const c = $('goalCard'); c.classList.add('away'); setTimeout(() => { if (!GC.open) c.hidden = true; }, 360);
+  const hp = $('hudPanel'); hp.classList.remove('goalflash'); void hp.offsetWidth; hp.classList.add('goalflash');
   tutorialStart();
 }
+$('goalCard').addEventListener('pointerdown', (e) => { e.preventDefault(); closeGoalCard(); });
+$('gameCanvas').addEventListener('pointerdown', () => { if (GC.open) closeGoalCard(); });
+window.addEventListener('keydown', () => { if (GC.open && screen === 'game' && !paused) closeGoalCard(); });
 let seenPower = {};
 function banner(text, sub = '', kind = '') {
   const el = $('banner');
@@ -3877,8 +3984,9 @@ function handle(ev) {
     else if (e.type === 'rcCall') { pop(e.x, e.y - 34, 'Help needed here!', '#ff9f1c', true); }
     else if (e.type === 'goal') {
       SFX.good();
-      if (e.which === 1) { pop(hx, hy, 'Goal 1 done!', '#3ee6a8', true); toast(S.secondaryDone ? 'Zone clean!' : `Goal 1 done! Now goal 2: ${S.L.goal.label}`, 'good'); }
-      else { pop(hx, hy, 'Goal 2 done!', '#3ee6a8', true); toast(S.primaryDone ? 'Both goals done!' : `Goal 2 done! Keep cleaning: ${Math.round(S.clean * 100)}/${Math.round(S.target * 100)}%`, 'good'); }
+      const st = goalState();
+      if (e.which === 1) { pop(hx, hy, 'Goal 1 done!', '#3ee6a8', true); if (!S.secondaryDone) banner('Goal 1 done!', `Now goal 2: ${S.L.goal.label} (${st[1].prog})`, 'goal'); }
+      else { pop(hx, hy, 'Goal 2 done!', '#3ee6a8', true); if (!S.primaryDone) banner('Goal 2 done!', `Now goal 1: clean the air to ${Math.round(S.target * 100)}% (${Math.round(clamp(S.clean, 0, 1) * 100)}% so far)`, 'goal'); }
     }
     else if (e.type === 'win') { MUS.duckTo = 0.22; setTimeout(() => { if (screen === 'game') MUS.duckTo = 0.5; }, 2600); SFX.win(); HV.override = 'celebrate'; HV.overrideT = 0; banner('Zone clean!', `${Math.round(S.clean * 100)}% of the zone cleared`); setTimeout(levelWon, 1700); }
     else if (e.type === 'lose') { MUS.duckTo = 0.3; SFX.lose(); HV.override = 'rest'; HV.overrideT = 0; setTimeout(levelLost, 1500); }
@@ -3949,6 +4057,7 @@ function levelWon() {
     return;
   }
   $('clearKicker').textContent = `Level ${run.li + 1} clear`;
+  $('clearGoals').innerHTML = `<li>✓ Cleaned the air to ${Math.round(S.target * 100)}%</li><li>✓ ${escapeHtml(S.L.goal.label)}</li>`;
   $('perkPrompt').textContent = 'Pick gear to keep for the rest of your run';
   $('clearTitle').textContent = st.clear;
   $('clearLesson').textContent = st.lesson;
@@ -3995,6 +4104,7 @@ window.addEventListener('keydown', (e) => { if (screen === 'title' && (e.key ===
 function togglePause() {
   if (screen !== 'game' || !$('clearSheet').hidden || !$('overSheet').hidden || !$('winSheet').hidden) return;
   paused = !paused; $('pauseSheet').hidden = !paused; MUS.duckTo = paused ? 0.35 : 1;
+  if (paused && S) goalItems($('pauseGoals'), S.L, goalState(), false);
 }
 
 // ---------- campaign map ----------
@@ -4103,7 +4213,7 @@ function openNews() {
   $('newsFact').innerHTML = `<b>Real fact</b><br>${escapeHtml(st.fact)}`;
   $('newsSources').innerHTML = st.sources && st.sources.length ? 'Sources: ' + st.sources.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${escapeHtml(t)}</a>`).join(' · ') : '';
   $('missionKicker').textContent = `Level ${li + 1} · ${L.zone} · ${L.place}`;
-  $('missionGoal').innerHTML = `Goal 1: clear <b>${Math.round(L.target * 100)}%</b> of the zone<br>Goal 2: ${escapeHtml(L.goal.label)}<small>You need both to finish the level.</small>`;
+  goalItems($('missionGoal'), L, null);
   const items = [
     ['PSI', `The haze here reads about <b>PSI ${L.psi}</b>, and up to ${L.core} in danger zones. Thicker haze takes longer to vacuum. A patch is clean below 10.`, '#ffd23f'],
     ['!', `${escapeHtml(st.how)}`, '#4cc9f0'],
@@ -4450,7 +4560,7 @@ function renderInfo() {
   const box = $('infoBody'); box.innerHTML = '';
   if (infoTab === 'how') {
     box.appendChild(card(heroIcon, 'Move and vacuum', `<p>Drag anywhere on the screen, or use the arrow keys or WASD. Your vacuum sucks up haze in the cone in front of you.</p><p>Every patch of ground has its own PSI. <b>Thicker haze takes longer to suck up</b>, and a patch only counts as clean once it is <b>below 10 PSI</b>.</p>`, ['Basics', '#ffd23f']));
-    box.appendChild(card(fromSheet('ui_icons', 'breath'), 'Two goals to win', `<p><b>Goal 1 (main): clean the zone.</b> The <b>Clean air</b> bar (top left) shows how much of the zone you've cleared. Get it past the yellow tick. The zone's PSI falls as you clean, and cleared ground stays clean unless a danger zone, a fire or a smog front blows haze back over it.</p><p><b>Goal 2 (side): the zone's task.</b> Check on neighbours, deliver masks, walk students to safety, restart generators or put out fires. Its counter sits next to the danger squares.</p><p>You need <b>both</b> ticked to finish a level. Your time counts towards your <b>speed score</b>.</p>`, ['Goals', '#3ee6a8']));
+    box.appendChild(card(fromSheet('ui_icons', 'breath'), 'Two goals to win', `<p><b>Goal 1 (main): clean the zone.</b> The <b>Clean air</b> bar (top left) shows how much of the zone you've cleared. Get it past the yellow tick. The zone's PSI falls as you clean, and cleared ground stays clean unless a danger zone, a fire or a smog front blows haze back over it.</p><p><b>Goal 2 (side): the zone's task.</b> Check on neighbours, deliver masks, walk students to safety, restart generators or put out fires. It has its own row under the Clean air bar, with a dot for each task.</p><p>You need <b>both</b> ticked to finish a level. Your time counts towards your <b>speed score</b>.</p>`, ['Goals', '#3ee6a8']));
     const rows = Object.entries(FRIENDS).map(([k, F]) => `<li><b>${F.name}</b> gives you: <b>${F.upText}</b>. ${F.help}.</li>`).join('');
     box.appendChild(card(friendIcon('scdf'), 'Friends make you stronger', `<p>Walk up to anyone with a <b>!</b> to bring them into your squad. Every friend gives you an <b>upgrade</b> (two of the same kind stack) and helps in their own way:</p><ul>${rows}</ul><p>Your upgrade badges sit at the bottom left.</p>`, ['Squad', '#4cc9f0']));
     box.appendChild(card(fromSheet('fx_airdrop', 'icon_ice'), 'Danger zones', `<p>Red zones pump out haze and <b>keep growing</b>. The bigger they get, the more they hurt.</p><p>Bring enough friends inside with you to <b>tame</b> one (its ring turns yellow), then vacuum it until no haze is left. A cleared zone stops for good and calls in an air drop.</p>`, ['Watch out', '#ff6b6b']));
@@ -4928,7 +5038,8 @@ function frame(now) {
   uiT += real;
   musicTick(real);
   if (screen === 'game' && S) {
-    const running = !paused && $('clearSheet').hidden && $('overSheet').hidden && $('winSheet').hidden;
+    if (GC.open) { GC.t += real; const gi = readInput(); if (Math.hypot(gi.x, gi.y) > 0.15 || gi.use || GC.t > 12) closeGoalCard(); }
+    const running = !paused && !GC.open && $('clearSheet').hidden && $('overSheet').hidden && $('winSheet').hidden;
     let dt = 0;
     if (running) {
       const sim = real * (window.__speed || 1);
