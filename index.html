@@ -3698,13 +3698,13 @@ function nearestGoal() {
   }
   if (S.primaryDone) return null;
   for (const z of S.dangers) if (z.active) consider(z.x, z.y, 'danger');
-  if (best) return best;
+  if (best) { const z = S.dangers.find((d) => d.active && d.x === best.x && d.y === best.y); if (z) best.psi = z.core || 0; return best; }
   if (levelClock - hazyCache.t > 1) {
     hazyCache.t = levelClock; hazyCache.p = null; let bv = CLEAN;
     for (let j = 1; j < S.rows - 1; j += 2) for (let i = 1; i < S.cols - 1; i += 2) {
       const c = j * S.cols + i; if (!S.reach[c]) continue;
       const v = S.d[c] - dist((i + 0.5) * CELL, (j + 0.5) * CELL, P.x, P.y) / 3000;
-      if (v > bv) { bv = v; hazyCache.p = { x: (i + 0.5) * CELL, y: (j + 0.5) * CELL }; }
+      if (v > bv) { bv = v; hazyCache.p = { x: (i + 0.5) * CELL, y: (j + 0.5) * CELL, psi: S.d[c] }; }
     }
   }
   return hazyCache.p && { ...hazyCache.p, kind: 'haze' };
@@ -3717,12 +3717,27 @@ function drawArrow(g, t) {
   const cx = VW / 2, cy = VH / 2, ang = Math.atan2(sy - cy, sx - cx);
   const k = Math.min((VW / 2 - m) / Math.abs(Math.cos(ang) || 1e-6), (VH / 2 - m - 50) / Math.abs(Math.sin(ang) || 1e-6));
   const ax = cx + Math.cos(ang) * k, ay = cy + 25 + Math.sin(ang) * k, s = Math.max(2, Math.round(PS / DPR * 1.5)) || 2;
-  // a badge behind the arrowhead shows what it points at
-  const ic = { elder: 'elder', box: 'box', student: 'student', gen: 'gen', fire: 'fire', dam: 'dam', shelter: 'kampung', danger: 'breath', haze: 'breath' }[goal.kind], icf = ic && fr('ui_icons', ic);
+  // a badge behind the arrowhead shows what it points at: the task's icon, or for haze a PSI tag with the reading there
+  if (goal.kind === 'danger' || goal.kind === 'haze') {
+    const sc = VW > 700 ? 1.2 : 1, v = Math.round(goal.psi || 0), bnd = band(v), w = Math.round(58 * sc), h = Math.round(34 * sc);
+    const af = fr('ui_hud', 'edge_arrow_0'), half = af ? Math.max(af.w, af.h) * s / 2 : 16;
+    const off = half + 4 + Math.min(w / 2 / Math.max(Math.abs(Math.cos(ang)), 1e-6), h / 2 / Math.max(Math.abs(Math.sin(ang)), 1e-6));
+    const bx = Math.round(ax - Math.cos(ang) * off), by = Math.round(ay - Math.sin(ang) * off);
+    const rr = (x, y, ww, hh, r) => { g.beginPath(); if (g.roundRect) g.roundRect(x, y, ww, hh, r); else g.rect(x, y, ww, hh); };
+    g.save();
+    rr(bx - w / 2 - 2, by - h / 2 - 2, w + 4, h + 4, 9); g.fillStyle = '#1b1533'; g.fill();
+    rr(bx - w / 2, by - h / 2, w, h, 7); g.fillStyle = bnd[2]; g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.28)'; g.fillRect(bx - w / 2 + 4, by - h / 2 + 2, w - 8, 2);
+    g.fillStyle = '#1b1533'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = `700 ${(9.5 * sc).toFixed(1)}px "Atkinson Hyperlegible", sans-serif`; g.fillText(v > 100 ? 'HIGH PSI' : 'PSI', bx, by - 8 * sc);
+    g.font = `700 ${Math.round(17 * sc)}px "Atkinson Hyperlegible", sans-serif`; g.fillText(String(v), bx, by + 6 * sc);
+    g.restore();
+  }
+  const ic = { elder: 'elder', box: 'box', student: 'student', gen: 'gen', fire: 'fire', dam: 'dam', shelter: 'kampung' }[goal.kind], icf = ic && fr('ui_icons', ic);
   if (icf) {
     const bx = Math.round(ax - Math.cos(ang) * 30), by = Math.round(ay - Math.sin(ang) * 30), r = 15;
     g.save(); g.beginPath(); g.arc(bx, by, r + 2, 0, Math.PI * 2); g.fillStyle = '#1b1533'; g.fill();
-    g.beginPath(); g.arc(bx, by, r, 0, Math.PI * 2); g.fillStyle = goal.kind === 'danger' ? '#ffb4a8' : '#fff6e0'; g.fill();
+    g.beginPath(); g.arc(bx, by, r, 0, Math.PI * 2); g.fillStyle = '#fff6e0'; g.fill();
     g.imageSmoothingEnabled = false; g.drawImage(A.ui_icons, icf.x, icf.y, icf.w, icf.h, bx - 10, by - 10, 20, 20); g.restore();
   }
   g.save(); g.translate(Math.round(ax), Math.round(ay)); g.rotate(ang);

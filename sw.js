@@ -1,7 +1,7 @@
 // Haze Squad's service worker (GitHub Pages only): the game works offline once it has been opened.
 // The page is network-first (so updates arrive), icons are cache-first, music is cached the first time it plays,
 // and the leaderboard is always fetched fresh when online.
-const V = 'haze-squad-ea1ab0e7a5';
+const V = 'haze-squad-a0debda87e';
 const CORE = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {
