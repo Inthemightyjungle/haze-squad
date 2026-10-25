@@ -1,7 +1,7 @@
 {
  "v": 2,
- "updated": "2026-10-25T10:55:06.998Z",
- "since": 1792925316,
+ "updated": "2026-10-25T11:18:22.700Z",
+ "since": 1792926521,
  "players": [
   {
    "id": "gh-sspandayang-star",
@@ -20,13 +20,13 @@
   {
    "id": "b17e174be70a",
    "name": "Kpea",
-   "score": 1550,
+   "score": 4090,
    "lv": [
     566,
     984,
-    null,
-    null,
-    null,
+    841,
+    764,
+    935,
     null
    ],
    "date": "2026-10-25"
