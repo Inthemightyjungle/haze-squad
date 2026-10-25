@@ -35,11 +35,13 @@ jobs:
         if: inputs.selftest
         run: |
           T="https://ntfy.sh/hazesquad-sg-scores-v2-k7q3-selftest-$GITHUB_RUN_ID"
-          curl -sS -o /dev/null -w "post: HTTP %{http_code}\n" -H "Origin: https://example.github.io" -d '{"v":2,"uid":"selftestselftest0001","name":"Self test","lv":[{"t":90,"hp":80},null,null,null,null,null]}' "$T"
-          curl -sS -D - -o /dev/null -X OPTIONS -H "Origin: https://example.github.io" -H "Access-Control-Request-Method: POST" "$T" | grep -i "access-control" || true
+          CODE=$(curl -sS -o /dev/null -w "%{http_code}" -H "Origin: https://example.github.io" -H "Content-Type: text/plain;charset=UTF-8" -d '{"v":2,"uid":"selftestselftest0001","name":"Self test","lv":[{"t":90,"hp":80},null,null,null,null,null]}' "$T")
+          CORS=$(curl -sS -D - -o /dev/null -X OPTIONS -H "Origin: https://example.github.io" -H "Access-Control-Request-Method: POST" "$T" | tr -d '\r' | grep -i "^access-control-allow-origin" || echo "none")
           echo '{}' > "$RUNNER_TEMP/lb.json"
-          RELAY="$T" FILE="$RUNNER_TEMP/lb.json" node scripts/pull-scores.js
-          cat "$RUNNER_TEMP/lb.json"
+          OUT=$(RELAY="$T" FILE="$RUNNER_TEMP/lb.json" node scripts/pull-scores.js)
+          ROW=$(node -e "const j=require(process.argv[1]);const p=(j.players||[])[0];console.log(p?p.name+' '+p.score:'none')" "$RUNNER_TEMP/lb.json")
+          echo "::notice title=Relay self test::post HTTP $CODE; CORS: $CORS; $OUT; read back: $ROW"
+          test "$ROW" != "none"
 
       - name: Add new scores
         if: ${{ !inputs.selftest }}
