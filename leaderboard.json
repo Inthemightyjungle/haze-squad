@@ -1,7 +1,7 @@
 {
  "v": 2,
- "updated": "2026-10-29T03:49:28.834Z",
- "since": 1793245568,
+ "updated": "2026-10-29T04:30:02.086Z",
+ "since": 1793248189,
  "players": [
   {
    "id": "87f55f28bb66",
@@ -60,6 +60,34 @@
    "date": "2026-10-26"
   },
   {
+   "id": "8ee015845c33",
+   "name": "Hero",
+   "score": 1463,
+   "lv": [
+    1463,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-10-29"
+  },
+  {
+   "id": "4916bc76ab36",
+   "name": "Hero",
+   "score": 1120,
+   "lv": [
+    1120,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-10-29"
+  },
+  {
    "id": "8536126f8ef8",
    "name": "Hero",
    "score": 864,
@@ -72,6 +100,48 @@
     null
    ],
    "date": "2026-10-27"
+  },
+  {
+   "id": "a3e2270ccd66",
+   "name": "Hero",
+   "score": 623,
+   "lv": [
+    623,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-10-29"
+  },
+  {
+   "id": "1c4c54b514a0",
+   "name": "v",
+   "score": 602,
+   "lv": [
+    602,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-10-29"
+  },
+  {
+   "id": "dec53aac8781",
+   "name": "hi",
+   "score": 561,
+   "lv": [
+    561,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-10-29"
   }
  ]
 }
