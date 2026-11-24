@@ -1,7 +1,7 @@
 {
  "v": 2,
- "updated": "2026-10-30T17:27:59.861Z",
- "since": 1793380810,
+ "updated": "2026-11-24T13:33:27.458Z",
+ "since": 1795510229,
  "players": [
   {
    "id": "87f55f28bb66",
@@ -170,6 +170,20 @@
     null
    ],
    "date": "2026-10-29"
+  },
+  {
+   "id": "bc2519bdd7d7",
+   "name": "Fluffystroll",
+   "score": 663,
+   "lv": [
+    663,
+    null,
+    null,
+    null,
+    null,
+    null
+   ],
+   "date": "2026-11-24"
   },
   {
    "id": "a3e2270ccd66",
