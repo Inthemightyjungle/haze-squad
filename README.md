@@ -11,6 +11,7 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
 | `index.html` | The whole game in one file (art, sound and code inside). |
 | `leaderboard.json` | The world leaderboard. The game reads it; only the robot below writes it. |
 | `.github/workflows/leaderboard.yml` | The leaderboard robot (a GitHub Action that runs every 10 minutes). |
+| `.github/workflows/republish.yml` | Publishes game updates: asks GitHub Pages to rebuild the site after every push to `main`. |
 | `scripts/pull-scores.js` | Reads new scores, checks and recomputes them, and merges them into `leaderboard.json`. |
 | `scripts/name-filter.js` | The name filter, shared with the game. |
 

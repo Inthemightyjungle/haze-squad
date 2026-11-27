@@ -1,0 +1,27 @@
+# Publishes game updates. GitHub Pages rebuilds the site by itself only for pushes from someone with admin
+# rights and a verified email address, so an update pushed by a tool can sit in the repository without
+# reaching the website. This asks Pages to rebuild after every push to main, so the site always shows
+# what is in the repository. (The leaderboard robot's own commits don't start workflows; it asks for its
+# rebuild itself, in leaderboard.yml.)
+name: Republish the site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+
+concurrency:
+  group: republish
+  cancel-in-progress: true
+
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask GitHub Pages to rebuild the site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" --silent || echo "::warning::GitHub Pages did not accept the rebuild request"
