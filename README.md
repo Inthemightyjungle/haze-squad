@@ -2,7 +2,7 @@
 
 A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find friends to build your squad, and clean the air zone by zone, from Woodlands to the peat fires in Sumatra. Every level is based on a real haze event, with sources.
 
-**Play:** https://sspandayang-star.github.io/haze-squad/ (after you switch on GitHub Pages, below).
+**Play:** https://inthemightyjungle.github.io/haze-squad/ (after you switch on GitHub Pages, below).
 
 ## What's here
 
@@ -16,7 +16,7 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
 
 ## Switch it on (one time)
 
-1. **Settings → Pages**: under *Build and deployment*, pick **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**. The game goes live at https://sspandayang-star.github.io/haze-squad/ within a few minutes.
+1. **Settings → Pages**: under *Build and deployment*, pick **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**. The game goes live at https://inthemightyjungle.github.io/haze-squad/ within a few minutes.
 2. **Settings → Actions → General**: allow actions to run (the default). The workflow asks for its own write permissions, so you don't need to change *Workflow permissions*.
 
 ## How the leaderboard works
@@ -32,7 +32,7 @@ A 16-bit top-down game about haze in Singapore. Grab Grandpa's old vacuum, find 
   - commits `leaderboard.json` and asks GitHub Pages to republish.
 - The player's own row shows straight away on their device; everyone else sees it after the next robot run (usually 10 to 20 minutes). If a score ever goes missing, the game sends it again when the player opens the board.
 
-**Names.** The game refuses names with sexual, vulgar, racist, abusive or violent words, in English, Malay, Singlish, Mandarin and Tamil. That includes spaced-out letters, leetspeak and lookalike letters. The robot runs the same check (`scripts/name-filter.js`): a bad name goes on the board as **Hero**.
+**Names.** The game refuses names with sexual, vulgar, racist, abusive or violent words, in English, Malay, Singlish, Mandarin and Tamil. That includes spaced-out letters, leetspeak and lookalike letters. The robot runs the same check (`scripts/name-filter.js`): a bad name goes on the board as **Hero**. Names are nicknames only: anything that looks like a phone number (five or more digits) or a Singapore IC number is refused in the game and turned into **Hero** by the robot.
 
 **Test the relay.** **Actions → Leaderboard → Run workflow**, tick *selftest*: it posts a test score to a separate test topic, reads it back and prints the result, without touching the board.
 

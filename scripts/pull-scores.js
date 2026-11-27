@@ -24,10 +24,12 @@ function load() {
 const okLevel = (li, r) => r && typeof r.t === 'number' && typeof r.hp === 'number' && isFinite(r.t) && isFinite(r.hp)
   && r.t >= MIN_T[li] && r.t <= MAX_T && r.hp >= 0 && r.hp <= MAX_HP;
 const playerId = (uid) => crypto.createHash('sha256').update('hz:' + uid).digest('hex').slice(0, 12);
+// names that look like a phone number (five or more digits) or a Singapore IC number never go on the board: same rule as the game
+const looksPrivate = (n) => /\d{5,}/.test(String(n || '').replace(/[\s._'-]/g, '')) || /(^|[^a-z])[stfgm]\d{7}[a-z]($|[^a-z])/i.test(String(n || ''));
 function cleanName(raw) {
   raw = String(raw || '');
   const cleaned = raw.replace(/[^\p{L}\p{N} ._'-]/gu, '').trim().slice(0, 16);
-  return !cleaned || nameProblem(raw) || nameProblem(cleaned) ? 'Hero' : cleaned;
+  return !cleaned || nameProblem(raw) || nameProblem(cleaned) || looksPrivate(raw) || looksPrivate(cleaned) ? 'Hero' : cleaned;
 }
 
 async function main() {
